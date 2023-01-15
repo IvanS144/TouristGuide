@@ -18,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mr.touristguide.Greeting
 import com.mr.touristguide.composables.data.MenuItem
@@ -70,7 +72,7 @@ fun NavigationDrawerScreen() {
     )
     ModalNavigationDrawer(drawerContent = {
         DrawerHeader()
-        DrawerBody(items)
+        DrawerBody(items = items, onItemClick = {item  -> navController.navigate(route=item.id) } )
     },
         drawerState = drawerState
     ) {
@@ -79,11 +81,34 @@ fun NavigationDrawerScreen() {
                 AppBar(onNavigationIconClick = {scope.launch{drawerState.open()}})
             }
         )
-        {
-            Surface(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)){
-                Greeting(name = "Tekst")
+        {it ->
+            Column(modifier = Modifier.fillMaxSize().background(Color.Yellow).padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding()))
+            {
+                NavHost(
+                    modifier = Modifier,
+                    navController = navController,
+                    startDestination = "home",
+                )
+                {
+                    composable(route = "home") {
+                        Home()
+                    }
+                    composable(route = "cities") {
+                        Cities()
+                    }
+                    composable(route = "znamenitosti") {
+                        Znamenitosti()
+                    }
+                    composable(route = "news") {
+                        News()
+                    }
+                    composable(route = "settings") {
+                        Settings()
+                    }
+                    composable(route = "favorites") {
+                        Favorites()
+                    }
+                }
             }
         }
 
@@ -103,14 +128,14 @@ fun DrawerBody(
     items: List<MenuItem>,
     modifier: Modifier = Modifier,
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
-//    onItemClick: (MenuItem) -> Unit
+    onItemClick: (MenuItem) -> Unit
 ) {
     LazyColumn(modifier) {
         items(items) { item ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-//                .clickable { onItemClick(item) }
+                .clickable { println(item.id); onItemClick(item) }
                     .padding(16.dp)
             ) {
                 Icon(imageVector = item.icon, contentDescription = item.contentDescription)
