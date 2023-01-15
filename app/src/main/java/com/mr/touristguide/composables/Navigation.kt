@@ -3,6 +3,7 @@
 package com.mr.touristguide.composables
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,15 +24,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.mr.touristguide.Greeting
 import com.mr.touristguide.composables.data.MenuItem
+import com.mr.touristguide.dao.impl.CityDaoJsonImpl
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationDrawerScreen() {
+fun NavigationDrawerScreen(context: Context) {
 //    val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val cityDao  = CityDaoJsonImpl(context)
+    val cities = cityDao.getCities()
     val items = listOf<MenuItem>(
         MenuItem(
             id = "home",
@@ -82,7 +86,10 @@ fun NavigationDrawerScreen() {
             }
         )
         {it ->
-            Column(modifier = Modifier.fillMaxSize().background(Color.Yellow).padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding()))
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Yellow)
+                .padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding()))
             {
                 NavHost(
                     modifier = Modifier,
@@ -94,7 +101,7 @@ fun NavigationDrawerScreen() {
                         Home()
                     }
                     composable(route = "cities") {
-                        Cities()
+                        CityList(cities = cities, modifier = Modifier.fillMaxSize())
                     }
                     composable(route = "znamenitosti") {
                         Znamenitosti()
@@ -135,7 +142,7 @@ fun DrawerBody(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                .clickable { println(item.id); onItemClick(item) }
+                    .clickable { println(item.id); onItemClick(item) }
                     .padding(16.dp)
             ) {
                 Icon(imageVector = item.icon, contentDescription = item.contentDescription)
