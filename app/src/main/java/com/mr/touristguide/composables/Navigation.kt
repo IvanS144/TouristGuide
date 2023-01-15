@@ -19,9 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.mr.touristguide.Greeting
 import com.mr.touristguide.composables.data.MenuItem
 import com.mr.touristguide.dao.impl.CityDaoJsonImpl
@@ -101,7 +103,7 @@ fun NavigationDrawerScreen(context: Context) {
                         Home()
                     }
                     composable(route = "cities") {
-                        CityList(cities = cities, modifier = Modifier.fillMaxSize())
+                        CityList(cities = cities, modifier = Modifier.fillMaxSize(), onItemClick = {item -> navController.navigate(route="cities/${item.id}")})
                     }
                     composable(route = "znamenitosti") {
                         Znamenitosti()
@@ -114,6 +116,10 @@ fun NavigationDrawerScreen(context: Context) {
                     }
                     composable(route = "favorites") {
                         Favorites()
+                    }
+                    composable(route = "cities/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType; defaultValue=1; nullable = false })){
+                        entry ->
+                        CityDetails(id = entry.arguments?.getInt("id"), cityDao = cityDao, modifier = Modifier.fillMaxSize() )
                     }
                 }
             }
