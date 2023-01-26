@@ -25,11 +25,9 @@ class MainActivity : ComponentActivity() {
     private val newsViewModel: NewsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.loadCities()
-        newsViewModel.loadNews()
         setContent {
             TouristGuideTheme {
-                NavigationDrawerScreen(cities = viewModel.citiesState.cities, weatherState = weatherViewModel.state, newsViewModel= newsViewModel, loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) })
+                NavigationDrawerScreen(cities = viewModel.citiesState.cities, weatherState = weatherViewModel.state, newsState = newsViewModel.state , loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) })
 
             }
         }

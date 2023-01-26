@@ -27,13 +27,14 @@ import com.mr.touristguide.core.presentation.data.MenuItem
 import com.mr.touristguide.core.model.City
 import com.mr.touristguide.news.presentation.Article
 import com.mr.touristguide.news.presentation.NewsScreen
+import com.mr.touristguide.news.presentation.NewsState
 import com.mr.touristguide.news.presentation.NewsViewModel
 import com.mr.touristguide.weather.presentation.WeatherState
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationDrawerScreen(cities: List<City>?, weatherState: WeatherState, newsViewModel: NewsViewModel, loadWeather: (City) -> Unit) {
+fun NavigationDrawerScreen(cities: List<City>?, weatherState: WeatherState, newsState: NewsState, loadWeather: (City) -> Unit) {
 //    val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
@@ -157,18 +158,20 @@ fun NavigationDrawerScreen(cities: List<City>?, weatherState: WeatherState, news
                     }
                     composable(route="news"){
 //                        newsViewModel.loadNews()
-                        newsViewModel.state.news?.let {news ->
+                        newsState.news?.let {news ->
                             NewsScreen(news = news, onHeadlineClick = {headline -> navController.navigate(route="articles/${headline.id}")} )
                         }
                     }
-                    composable(route="articles/{id}", arguments = listOf(navArgument("id") { type = NavType.StringType; nullable = false })){
+                    composable(route="articles/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType; nullable = false })){
                         entry ->
-                        val id = entry.arguments?.getString("id")
+                        val id = entry.arguments?.getInt("id")
+                        println("KISAMAAAAAAAAAAAAAAAAAAAAA $id")
+                        println(newsState.news?.articles)
                         id?.let{
-                            val article = newsViewModel.getArticle(id)
-                            article?.let{
-                                Article(headline = article)
-                            }
+                                val headline = newsState.news?.articles?.first{article -> article.id ==id}
+                                headline?.let {
+                                    Article(headline = headline)
+                                }
                         }
                     }
                 }

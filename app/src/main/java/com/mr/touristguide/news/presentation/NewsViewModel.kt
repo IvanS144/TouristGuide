@@ -19,6 +19,10 @@ class NewsViewModel @Inject constructor(
     var state by mutableStateOf(NewsState())
     private set
 
+    init{
+        loadNews()
+    }
+
     fun loadNews(){
         viewModelScope.launch {
             state = state.copy(
@@ -35,6 +39,7 @@ class NewsViewModel @Inject constructor(
                 }
                 is Resource.Error ->{
                     state.copy(
+                        news = result.data,
                         isLoading = false,
                         isError = true
                     )
@@ -43,7 +48,7 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getArticle(id: String): HeadlineDto?{
+    fun getArticle(id: Int): HeadlineDto?{
         return state.news?.articles?.first{article -> article.id == id}
     }
 }

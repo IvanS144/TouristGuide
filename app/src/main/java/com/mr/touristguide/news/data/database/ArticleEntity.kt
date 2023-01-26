@@ -10,10 +10,10 @@ import java.util.UUID
 @Entity(tableName = "articles")
 data class ArticleEntity(
     @PrimaryKey(autoGenerate = true)
-    var id: Int,
+    var id: Int?,
     @ColumnInfo(name="source_name")
     val sourceName: String,
-    val author: String,
+    val author: String?,
     val title: String,
     val description: String?,
     val url: String,
@@ -25,7 +25,7 @@ data class ArticleEntity(
 ){
     fun toArticleDto(): HeadlineDto{
         return HeadlineDto(
-            id = id.toString(),
+            id = id,
             source = SourceDto(id = null, name = sourceName),
             author = author,
             title = title,

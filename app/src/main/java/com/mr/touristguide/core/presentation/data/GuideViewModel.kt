@@ -28,6 +28,10 @@ class GuideViewModel @Inject constructor(
     var landmarksState by mutableStateOf(LandmarksState())
     private set
 
+    init{
+        loadCities()
+    }
+
     fun loadCities(){
         viewModelScope.launch {
             citiesState = citiesState.copy(

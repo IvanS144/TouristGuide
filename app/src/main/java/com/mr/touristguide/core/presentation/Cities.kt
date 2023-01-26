@@ -103,11 +103,11 @@ fun CityWeather(city: City, weatherState: WeatherState) {
             Spacer(modifier = Modifier.height(16.dp))
             WeatherForecast(state = weatherState)
         }
-        if(weatherState.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
+//        if(weatherState.isLoading) {
+//            CircularProgressIndicator(
+//                modifier = Modifier.align(Alignment.Center)
+//            )
+//        }
         weatherState.error?.let { error ->
             Text(
                 text = error,
