@@ -30,6 +30,7 @@ class GuideViewModel @Inject constructor(
 
     init{
         loadCities()
+        loadLandmarks()
     }
 
     fun loadCities(){
@@ -48,6 +49,7 @@ class GuideViewModel @Inject constructor(
                 }
                 is Resource.Error ->{
                     citiesState.copy(
+                        cities = result.data,
                         isLoading = false,
                         isError = true
                     )
@@ -65,13 +67,14 @@ class GuideViewModel @Inject constructor(
             landmarksState = when(val result = landmarkRepository.getLandmarks()){
                 is Resource.Success -> {
                     landmarksState.copy(
-                        cities = result.data,
+                        landmarks = result.data,
                         isLoading = false,
                         isError = false
                     )
                 }
                 is Resource.Error ->{
                     landmarksState.copy(
+                        landmarks = result.data,
                         isLoading = false,
                         isError = true
                     )

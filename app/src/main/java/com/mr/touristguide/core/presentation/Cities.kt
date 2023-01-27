@@ -7,11 +7,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,16 +27,30 @@ import com.mr.touristguide.weather.presentation.WeatherViewModel
 import com.mr.touristguide.weather.presentation.colors.DarkBlue
 import com.mr.touristguide.weather.presentation.colors.DeepBlue
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CityList(cities: List<City>, modifier: Modifier = Modifier, onItemClick: (City) -> Unit) {
-    LazyColumn(modifier = modifier){
-        items(items = cities){
-            item ->
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .clickable { onItemClick(item) }) {
-                Text(text = item.name, style= TextStyle(fontSize = 16.sp))
+fun CityList(cities: List<City>, modifier: Modifier = Modifier, onItemClick: (City) -> Unit, onFloatingButtonClick: () -> Unit) {
+    Scaffold(modifier = modifier,
+    floatingActionButton = {
+        FloatingActionButton(onClick = { onFloatingButtonClick()},
+        shape= CircleShape) {
+
+
+        }
+    }) {
+        LazyColumn(modifier = Modifier.fillMaxSize().padding(top = it.calculateTopPadding(), bottom=it.calculateBottomPadding())) {
+            items(items = cities) { item ->
+                Surface(
+                    modifier = Modifier.padding(all = 4.dp),
+                    shape = MaterialTheme.shapes.small
+                ) {
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable { onItemClick(item) }) {
+                        Text(text = item.name, style = TextStyle(fontSize = 16.sp))
+                    }
+                }
             }
         }
     }
@@ -54,7 +66,7 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
 //    }
 //    val city = cityDao.getById(index)
     val scrollState = rememberScrollState()
-    val nameStyle = TextStyle(fontSize=20.sp, fontStyle = FontStyle.Italic)
+    val nameStyle = TextStyle(fontSize=40.sp, fontStyle = FontStyle.Italic)
     Column(modifier = Modifier
         .fillMaxSize()
         .verticalScroll(state = scrollState)) {

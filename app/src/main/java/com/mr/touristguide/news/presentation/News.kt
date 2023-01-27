@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,7 +26,7 @@ import coil.compose.AsyncImage
 import com.mr.touristguide.news.data.remote.HeadlineDto
 import com.mr.touristguide.news.data.remote.NewsDto
 
-val titleTextStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp)
+val titleTextStyle = TextStyle(fontWeight = FontWeight.Bold, fontSize = 22.sp)
 val sourceTextStyle = TextStyle(fontSize = 16.sp)
 
 @Composable
@@ -94,21 +95,23 @@ fun Article(modifier: Modifier = Modifier, headline: HeadlineDto) {
         Text(text = headline.title, style = titleTextStyle)
         Text(text = headline.source.name, fontSize = 18.sp)
         Spacer(modifier = Modifier.height(5.dp))
-        if (headline.description != null)
-            Text(text = headline.description, fontSize = 19.sp)
-        Spacer(modifier = Modifier.height(5.dp))
         if (headline.urlToImage != null) {
-            AsyncImage(
-                model = headline.urlToImage,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.weight(1f)
+            Surface(shape=MaterialTheme.shapes.small) {
+                AsyncImage(
+                    model = headline.urlToImage,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.weight(1f),
 
-            )
+                    )
+            }
         }
         Spacer(modifier = Modifier.height(5.dp))
+        if (headline.description != null)
+            Text(text = headline.description, fontSize = 19.sp, fontStyle = FontStyle.Italic)
+        Spacer(modifier = Modifier.height(5.dp))
         if (headline.content != null)
-            Text(text = headline.content, fontSize = 18.sp)
+            Text(text = headline.content, fontSize = 20.sp)
     }
 
 }

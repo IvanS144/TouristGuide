@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.mr.touristguide.core.presentation.data.MenuItem
 import com.mr.touristguide.core.model.City
+import com.mr.touristguide.core.model.Landmark
 import com.mr.touristguide.news.presentation.Article
 import com.mr.touristguide.news.presentation.NewsScreen
 import com.mr.touristguide.news.presentation.NewsState
@@ -34,13 +35,19 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationDrawerScreen(cities: List<City>?, weatherState: WeatherState, newsState: NewsState, loadWeather: (City) -> Unit) {
+fun NavigationDrawerScreen(
+    cities: List<City>?,
+    landmarks: List<Landmark>?,
+    weatherState: WeatherState,
+    newsState: NewsState,
+    loadWeather: (City) -> Unit
+) {
 //    val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 //    viewModel.loadCities()
-//    val cities = viewModel.state
+//    val landmarks = viewModel.state
     val items = listOf<MenuItem>(
         MenuItem(
             id = "home",
@@ -51,13 +58,13 @@ fun NavigationDrawerScreen(cities: List<City>?, weatherState: WeatherState, news
         MenuItem(
             id = "cities",
             itemText = "Cities",
-            contentDescription = "Go to cities screen",
+            contentDescription = "Go to landmarks screen",
             icon = Icons.Default.LocationOn
         ),
         MenuItem(
-            id = "znamenitosti",
-            itemText = "Znamenitosti",
-            contentDescription = "Go to znamenitosti screen",
+            id = "landmarks",
+            itemText = "Landmarks",
+            contentDescription = "Go to landmarks screen",
             icon = Icons.Default.LocationOn
         ),
         MenuItem(
@@ -83,24 +90,35 @@ fun NavigationDrawerScreen(cities: List<City>?, weatherState: WeatherState, news
             itemText = "Map of cities",
             contentDescription = "Go to map of cities",
             icon = Icons.Default.LocationOn
+        ),
+        MenuItem(
+            id = "landmarksmap",
+            itemText = "Map of landmarks",
+            contentDescription = "Go to map of landmarks",
+            icon = Icons.Default.LocationOn
         )
     )
-    ModalNavigationDrawer(drawerContent = {
-        DrawerHeader()
-        DrawerBody(items = items, onItemClick = {item  -> navController.navigate(route=item.id) } )
-    },
+    ModalNavigationDrawer(
+        drawerContent = {
+            DrawerHeader()
+            DrawerBody(
+                items = items,
+                onItemClick = { item -> navController.navigate(route = item.id) })
+        },
         drawerState = drawerState
     ) {
         Scaffold(
             topBar = {
-                AppBar(onNavigationIconClick = {scope.launch{drawerState.open()}})
+                AppBar(onNavigationIconClick = { scope.launch { drawerState.open() } })
             }
         )
-        {it ->
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Yellow)
-                .padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding()))
+        { it ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Yellow)
+                    .padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding())
+            )
             {
                 NavHost(
                     modifier = Modifier,
@@ -112,15 +130,22 @@ fun NavigationDrawerScreen(cities: List<City>?, weatherState: WeatherState, news
                         Home()
                     }
                     composable(route = "cities") {
-                        if(cities!=null) {
+                        if (cities != null) {
                             CityList(
                                 cities = cities,
                                 modifier = Modifier.fillMaxSize(),
-                                onItemClick = { item -> navController.navigate(route = "cities/${item.id}") })
+                                onItemClick = { item -> navController.navigate(route = "cities/${item.id}") },
+                            onFloatingButtonClick = {navController.navigate("citiesmap")})
                         }
                     }
-                    composable(route = "znamenitosti") {
-                        Znamenitosti()
+                    composable(route = "landmarks") {
+                        if(landmarks!=null) {
+                            LandmarkList(
+                                landmarks = landmarks,
+                                modifier = Modifier.fillMaxSize(),
+                                onItemClick = { item -> navController.navigate(route = "landmarks/${item.id}") },
+                                onFloatingButtonClick = { navController.navigate(route = "landmarksmap") })
+                        }
                     }
                     composable(route = "news") {
                         News()
@@ -131,47 +156,85 @@ fun NavigationDrawerScreen(cities: List<City>?, weatherState: WeatherState, news
                     composable(route = "favorites") {
                         Favorites()
                     }
-                    composable(route = "cities/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType; defaultValue=1; nullable = false })){
-                        entry ->
+                    composable(
+                        route = "cities/{id}",
+                        arguments = listOf(navArgument("id") {
+                            type = NavType.IntType; defaultValue = 1; nullable = false
+                        })
+                    ) { entry ->
                         val id = entry.arguments?.getInt("id")
-                        if(id!=null) {
-                            val selectedCity = cities?.first{city -> city.id ==id}?.let {
+                        if (id != null) {
+                            val selectedCity = cities?.first { city -> city.id == id }
+                            if (selectedCity != null) {
                                 CityDetails(
-                                    city = it,
+                                    city = selectedCity,
                                     modifier = Modifier.fillMaxSize(),
                                     openWeather = { id: Int -> navController.navigate(route = "weather/${id}") })
                             }
                         }
                     }
-                    composable(route="weather/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType; defaultValue=1; nullable = false })){
-                        entry ->
+                    composable(
+                        route = "landmarks/{id}",
+                        arguments = listOf(navArgument("id") {
+                            type = NavType.IntType; defaultValue = 1; nullable = false
+                        })
+                    ) { entry ->
                         val id = entry.arguments?.getInt("id")
-                        if(id!=null) {
-                            val selectedCity = cities?.first{city -> city.id==id}?.let {
+                        if (id != null) {
+                            val selectedLandmark = landmarks?.first { landmark -> landmark.id == id }
+                            if(selectedLandmark!=null) {
+                                LandmarkDetails(
+                                    landmark = selectedLandmark,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            }
+
+                        }
+                    }
+                    composable(
+                        route = "weather/{id}",
+                        arguments = listOf(navArgument("id") {
+                            type = NavType.IntType; defaultValue = 1; nullable = false
+                        })
+                    ) { entry ->
+                        val id = entry.arguments?.getInt("id")
+                        if (id != null) {
+                            val selectedCity = cities?.first { city -> city.id == id }?.let {
                                 loadWeather(it)
                                 CityWeather(city = it, weatherState)
                             }
                         }
                     }
-                    composable(route = "citiesmap"){
-                        CitiesMap(modifier = Modifier.fillMaxSize(), cities, onMarkerClick = {id: Int -> navController.navigate("cities/${id}")})
+                    composable(route = "citiesmap") {
+                        CitiesMap(
+                            modifier = Modifier.fillMaxSize(),
+                            cities,
+                            onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") })
                     }
-                    composable(route="news"){
+                    composable(route = "landmarksmap"){
+                        LandmarksMap(landmarks = landmarks, onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") } )
+                    }
+                    composable(route = "news") {
 //                        newsViewModel.loadNews()
-                        newsState.news?.let {news ->
-                            NewsScreen(news = news, onHeadlineClick = {headline -> navController.navigate(route="articles/${headline.id}")} )
+                        if(newsState.news!=null){
+                            NewsScreen(
+                                news = newsState.news,
+                                onHeadlineClick = { headline -> navController.navigate(route = "articles/${headline.id}") })
                         }
                     }
-                    composable(route="articles/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType; nullable = false })){
-                        entry ->
+                    composable(
+                        route = "articles/{id}",
+                        arguments = listOf(navArgument("id") {
+                            type = NavType.IntType; nullable = false
+                        })
+                    ) { entry ->
                         val id = entry.arguments?.getInt("id")
-                        println("KISAMAAAAAAAAAAAAAAAAAAAAA $id")
-                        println(newsState.news?.articles)
-                        id?.let{
-                                val headline = newsState.news?.articles?.first{article -> article.id ==id}
-                                headline?.let {
-                                    Article(headline = headline)
-                                }
+                        if(id!=null){
+                            val headline =
+                                newsState.news?.articles?.first { article -> article.id == id }
+                            if(headline!=null){
+                                Article(headline = headline)
+                            }
                         }
                     }
                 }

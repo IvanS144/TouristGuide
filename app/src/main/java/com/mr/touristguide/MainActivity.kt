@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TouristGuideTheme {
-                NavigationDrawerScreen(cities = viewModel.citiesState.cities, weatherState = weatherViewModel.state, newsState = newsViewModel.state , loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) })
+                NavigationDrawerScreen(cities = viewModel.citiesState.cities, landmarks = viewModel.landmarksState.landmarks, weatherState = weatherViewModel.state, newsState = newsViewModel.state , loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) })
 
             }
         }
