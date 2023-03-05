@@ -221,6 +221,7 @@ fun NavigationDrawerScreen(
                                 LandmarkDetails(
                                     landmark = selectedLandmark,
                                     modifier = Modifier.fillMaxSize(),
+                                    showOnMap = { navController.navigate(route="map_of_cities?latitude=${selectedLandmark.latitude}&longitude=${selectedLandmark.longitude}&zoom=10.0")},
                                     searchViewModel = searchViewModel
                                 )
                             }
@@ -268,8 +269,12 @@ fun NavigationDrawerScreen(
                             zoom = zoom,
                         )
                     }
-                    composable(route = "map_of_landmarks"){
-                        LandmarksMap(landmarks = landmarks, onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") } )
+                    composable(route = "map_of_landmarks?latitude={latitude}&longitude={longitude}&zoom={zoom}"){
+                            entry ->
+                        val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.04338
+                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 44.04338
+                        val zoom = entry.arguments?.getFloat("zoom") ?: 7f
+                        LandmarksMap(landmarks = landmarks, onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") }, latitude = latitude, longitude = longitude, zoom=zoom )
                     }
                     composable(route = "news") {
 //                        newsViewModel.loadNews()

@@ -43,10 +43,10 @@ fun CityMarkers(cities: List<City>, onMarkerClick: (Int) -> Unit) {
 }
 
 @Composable
-fun LandmarksMap(modifier: Modifier = Modifier, landmarks: List<Landmark>?, onMarkerClick: (Int) -> Unit) {
+fun LandmarksMap(modifier: Modifier = Modifier, landmarks: List<Landmark>?, onMarkerClick: (Int) -> Unit, latitude:Double = 44.04338, longitude: Double = 17.78456, zoom: Float = 7f) {
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(44.04338, 17.78456), 7f)
+        position = CameraPosition.fromLatLngZoom(LatLng(latitude, longitude), zoom)
     }
     if(landmarks!=null) {
         Column(modifier = modifier) {

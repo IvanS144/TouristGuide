@@ -92,7 +92,7 @@ fun LandmarkList(landmarks: List<Landmark>, modifier: Modifier = Modifier, onIte
 
 @OptIn(ExperimentalPagingApi::class)
 @Composable
-fun LandmarkDetails(landmark: Landmark, modifier: Modifier = Modifier, searchViewModel: SearchViewModel) {
+fun LandmarkDetails(landmark: Landmark, modifier: Modifier = Modifier, showOnMap: () -> Unit, searchViewModel: SearchViewModel) {
     val images = searchViewModel.searchedImages.collectAsLazyPagingItems()
     val nameStyle = TextStyle(fontSize=40.sp, fontStyle = FontStyle.Italic)
     val context = LocalContext.current
@@ -134,6 +134,15 @@ fun LandmarkDetails(landmark: Landmark, modifier: Modifier = Modifier, searchVie
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     )
+                }
+            }
+        }
+        item {
+            Row(modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center) {
+                Button(onClick = { showOnMap() }) {
+                    Text("Show on map")
                 }
             }
         }
