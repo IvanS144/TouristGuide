@@ -26,6 +26,7 @@ android {
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
         buildConfigField "String", "NEWS_API_KEY", "\"${properties.getProperty("NEWS_API_KEY")}\""
+        buildConfigField "String", "UNSPLASH_API_KEY", "\"${properties.getProperty("UNSPLASH_API_KEY")}\""
     }
 
     buildTypes {
@@ -97,6 +98,20 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:1.2.1"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-paging:2.4.0"
+
+    //Paging 3
+    implementation 'androidx.paging:paging-compose:1.0.0-alpha14'
+
+    //Prefferences
+    implementation "androidx.datastore:datastore-preferences:1.1.0-alpha01"
+
+    //Web view
+    implementation 'com.google.accompanist:accompanist-webview:0.28.0'
+
+    //Youtube video player
+    "implementation" ("com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0")
+
 }
 
 kapt {

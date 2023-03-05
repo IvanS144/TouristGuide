@@ -14,5 +14,7 @@ data class CityDto(
     @field:Json(name="latitude")
     val latitude: Double,
     @field:Json(name="longitude")
-    val longitude: Double
+    val longitude: Double,
+    @field:Json(name="searchTerm")
+    val searchTerm: String
 )

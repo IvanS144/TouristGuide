@@ -7,11 +7,12 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun AppBar(
+    title: String,
     onNavigationIconClick: () -> Unit
 ) {
     SmallTopAppBar(
         title = {
-            Text(text = "App bar text")
+            Text(text = title)
         },
         colors = TopAppBarDefaults.smallTopAppBarColors(),
         navigationIcon = {

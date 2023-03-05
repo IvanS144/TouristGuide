@@ -3,6 +3,7 @@
 package com.mr.touristguide.core.presentation
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,21 +12,27 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.mr.touristguide.core.presentation.data.MenuItem
 import com.mr.touristguide.core.model.City
 import com.mr.touristguide.core.model.Landmark
+import com.mr.touristguide.core.presentation.data.ImagesViewModel
+import com.mr.touristguide.core.presentation.data.SearchViewModel
+import com.mr.touristguide.core.presentation.data.SettingsViewModel
 import com.mr.touristguide.news.presentation.Article
 import com.mr.touristguide.news.presentation.NewsScreen
 import com.mr.touristguide.news.presentation.NewsState
@@ -33,6 +40,7 @@ import com.mr.touristguide.news.presentation.NewsViewModel
 import com.mr.touristguide.weather.presentation.WeatherState
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPagingApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NavigationDrawerScreen(
@@ -40,12 +48,19 @@ fun NavigationDrawerScreen(
     landmarks: List<Landmark>?,
     weatherState: WeatherState,
     newsState: NewsState,
-    loadWeather: (City) -> Unit
+    loadWeather: (City) -> Unit,
+    imagesViewModel: ImagesViewModel = hiltViewModel(),
+    settingsViewModel: SettingsViewModel
 ) {
 //    val scaffoldState = rememberScaffoldState()
+//    var title by remember { mutableStateOf("Home") }
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val route = backStackEntry?.destination?.route ?: "Home"
+    val currentScreenTitle = getTitleByRoute(route)
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val getAllImages = imagesViewModel.getAllImages.collectAsLazyPagingItems()
 //    viewModel.loadCities()
 //    val landmarks = viewModel.state
     val items = listOf<MenuItem>(
@@ -86,42 +101,54 @@ fun NavigationDrawerScreen(
             icon = Icons.Default.Notifications
         ),
         MenuItem(
-            id = "citiesmap",
+            id = "map_of_cities",
             itemText = "Map of cities",
             contentDescription = "Go to map of cities",
             icon = Icons.Default.LocationOn
         ),
         MenuItem(
-            id = "landmarksmap",
+            id = "map_of_landmarks",
+            itemText = "Map of landmarks",
+            contentDescription = "Go to map of landmarks",
+            icon = Icons.Default.LocationOn
+        ),
+        MenuItem(
+            id = "images",
             itemText = "Map of landmarks",
             contentDescription = "Go to map of landmarks",
             icon = Icons.Default.LocationOn
         )
     )
+    BackHandler(onBack = { })
     ModalNavigationDrawer(
         drawerContent = {
             DrawerHeader()
             DrawerBody(
                 items = items,
-                onItemClick = { item -> navController.navigate(route = item.id) })
+                onItemClick = { item -> navController.navigate(route = item.id)})
         },
         drawerState = drawerState
     ) {
         Scaffold(
             topBar = {
-                AppBar(onNavigationIconClick = { scope.launch { drawerState.open() } })
+                AppBar(title = currentScreenTitle, onNavigationIconClick = { scope.launch { drawerState.open() } })
             }
         )
         { it ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Yellow)
-                    .padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding())
-            )
-            {
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .background(Color.Yellow)
+//                    .padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding())
+//            )
+//            {
                 NavHost(
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            top = it.calculateTopPadding(),
+                            bottom = it.calculateBottomPadding()
+                        ),
                     navController = navController,
                     startDestination = "home",
                 )
@@ -151,7 +178,7 @@ fun NavigationDrawerScreen(
                         News()
                     }
                     composable(route = "settings") {
-                        Settings()
+                        SettingsScreen(settingsViewModel = settingsViewModel)
                     }
                     composable(route = "favorites") {
                         Favorites()
@@ -166,10 +193,15 @@ fun NavigationDrawerScreen(
                         if (id != null) {
                             val selectedCity = cities?.first { city -> city.id == id }
                             if (selectedCity != null) {
+                                //title = selectedCity.name
+                                val searchViewModel = hiltViewModel<SearchViewModel>()
+                                searchViewModel.updateSearchQuery(selectedCity.searchTerm)
+                                searchViewModel.search()
                                 CityDetails(
                                     city = selectedCity,
                                     modifier = Modifier.fillMaxSize(),
-                                    openWeather = { id: Int -> navController.navigate(route = "weather/${id}") })
+                                    openWeather = { id: Int -> navController.navigate(route = "weather/${id}") },
+                                searchViewModel)
                             }
                         }
                     }
@@ -205,13 +237,13 @@ fun NavigationDrawerScreen(
                             }
                         }
                     }
-                    composable(route = "citiesmap") {
+                    composable(route = "map_of_cities") {
                         CitiesMap(
                             modifier = Modifier.fillMaxSize(),
                             cities,
                             onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") })
                     }
-                    composable(route = "landmarksmap"){
+                    composable(route = "map_of_landmarks"){
                         LandmarksMap(landmarks = landmarks, onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") } )
                     }
                     composable(route = "news") {
@@ -237,11 +269,36 @@ fun NavigationDrawerScreen(
                             }
                         }
                     }
+                    composable(route="images"){
+                        ImagesList(items = getAllImages)
+                    }
                 }
-            }
+//            }
         }
 
     }
+}
+
+private fun getTitleByRoute(route: String) = if (route == "home") {
+    "Home"
+} else if (route == "cities" || route.startsWith("cities")) {
+    "Cities"
+} else if (route == "news" || route.startsWith("articles")) {
+    "News"
+} else if (route == "landmarks" || route.startsWith("landmarks")) {
+    "Landmarks"
+} else if (route == "favorites") {
+    "Favorites"
+} else if (route == "settings") {
+    "Settings"
+} else if (route == "map_of_cities") {
+    "Map of cities"
+} else if (route == "map_of_landmarks") {
+    "Map of landmarks"
+} else if (route.startsWith("weather")) {
+    "Weather"
+} else {
+    "Tourist guide"
 }
 
 @Composable

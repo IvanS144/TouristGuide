@@ -14,7 +14,7 @@ import com.mr.touristguide.core.model.Landmark
 fun CitiesMap(modifier: Modifier = Modifier, cities: List<City>?, onMarkerClick: (Int) -> Unit) {
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(44.04338, 17.78456), 17f)
+        position = CameraPosition.fromLatLngZoom(LatLng(44.04338, 17.78456), 7f)
     }
     if(cities!=null) {
         Column(modifier = modifier) {
@@ -46,7 +46,7 @@ fun CityMarkers(cities: List<City>, onMarkerClick: (Int) -> Unit) {
 fun LandmarksMap(modifier: Modifier = Modifier, landmarks: List<Landmark>?, onMarkerClick: (Int) -> Unit) {
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(44.04338, 17.78456), 17f)
+        position = CameraPosition.fromLatLngZoom(LatLng(44.04338, 17.78456), 7f)
     }
     if(landmarks!=null) {
         Column(modifier = modifier) {

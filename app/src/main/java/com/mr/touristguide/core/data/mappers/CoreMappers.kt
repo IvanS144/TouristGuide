@@ -5,25 +5,29 @@ import com.mr.touristguide.core.data.remote.LandmarkDto
 import com.mr.touristguide.core.model.City
 import com.mr.touristguide.core.model.Landmark
 
-fun mapToCities(cityDtos: List<CityDto>): List<City>{
-    return cityDtos.map{cityDto ->
+fun mapToCities(cityDtos: List<CityDto>): List<City> {
+    return cityDtos.map { cityDto ->
         City(
             id = cityDto.id,
             name = cityDto.name,
             shortDescription = cityDto.shortDescription,
             mainDescription = cityDto.mainDescription,
             latitude = cityDto.latitude,
-            longitude = cityDto.longitude)}.toList()
+            longitude = cityDto.longitude,
+            searchTerm = cityDto.searchTerm
+        )
+    }.toList()
 }
 
-fun mapToLandmarks(landmarkDtos: List<LandmarkDto>) : List<Landmark>{
-    return landmarkDtos.map{ landmarkDto ->
+fun mapToLandmarks(landmarkDtos: List<LandmarkDto>): List<Landmark> {
+    return landmarkDtos.map { landmarkDto ->
         Landmark(
             id = landmarkDto.id,
             name = landmarkDto.name,
             shortDescription = landmarkDto.shortDescription,
             mainDescription = landmarkDto.mainDescription,
             latitude = landmarkDto.latitude,
-            longitude= landmarkDto.longitude)
+            longitude = landmarkDto.longitude
+        )
     }
 }

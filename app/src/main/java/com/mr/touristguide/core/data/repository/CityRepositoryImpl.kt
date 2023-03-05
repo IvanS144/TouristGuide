@@ -17,13 +17,13 @@ import javax.inject.Inject
 class CityRepositoryImpl @Inject constructor(private val api: CitiesApi, private val app: Application) : CityRepository{
     private val gson: Gson = Gson()
     override suspend fun getCities(): Resource<List<City>> {
-        return try{
-            println("request sent")
-            Resource.Success(
-                data = mapToCities(api.getCities())
-            )
-        }
-        catch(e: Exception){
+//        return try{
+//            println("request sent")
+//            Resource.Success(
+//                data = mapToCities(api.getCities())
+//            )
+//        }
+//        catch(e: Exception){
             println("ERROR")
             val inputStream = app.baseContext.resources.openRawResource(R.raw.cities)
             val json = inputStream.readBytes().toString(Charset.defaultCharset())
@@ -32,7 +32,7 @@ class CityRepositoryImpl @Inject constructor(private val api: CitiesApi, private
             }
             val typeToken = object: TypeToken<List<City>>(){}.type
             val cities: List<City> = gson.fromJson(json, typeToken)
-            Resource.Error(message ="An error occurred", data = cities)
-        }
+            return Resource.Error(message ="An error occurred", data = cities)
+//        }
     }
 }
