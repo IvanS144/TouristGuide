@@ -119,7 +119,6 @@ fun NavigationDrawerScreen(
             icon = Icons.Default.LocationOn
         )
     )
-    BackHandler(onBack = { })
     ModalNavigationDrawer(
         drawerContent = {
             DrawerHeader()
@@ -201,6 +200,7 @@ fun NavigationDrawerScreen(
                                     city = selectedCity,
                                     modifier = Modifier.fillMaxSize(),
                                     openWeather = { id: Int -> navController.navigate(route = "weather/${id}") },
+                                    showOnMap = { navController.navigate(route="map_of_cities?latitude=${selectedCity.latitude}&longitude=${selectedCity.longitude}&zoom=10.0")},
                                 searchViewModel)
                             }
                         }
@@ -215,9 +215,13 @@ fun NavigationDrawerScreen(
                         if (id != null) {
                             val selectedLandmark = landmarks?.first { landmark -> landmark.id == id }
                             if(selectedLandmark!=null) {
+                                val searchViewModel = hiltViewModel<SearchViewModel>()
+                                searchViewModel.updateSearchQuery(selectedLandmark.name)
+                                searchViewModel.search()
                                 LandmarkDetails(
                                     landmark = selectedLandmark,
-                                    modifier = Modifier.fillMaxSize()
+                                    modifier = Modifier.fillMaxSize(),
+                                    searchViewModel = searchViewModel
                                 )
                             }
 
@@ -237,11 +241,32 @@ fun NavigationDrawerScreen(
                             }
                         }
                     }
-                    composable(route = "map_of_cities") {
+                    composable(
+                        route = "map_of_cities?latitude={latitude}&longitude={longitude}&zoom={zoom}",
+                        arguments = listOf(
+                            navArgument("latitude"){
+                            type = NavType.FloatType; defaultValue = 44.04338f; nullable = false
+                        },
+                            navArgument("longitude"){
+                                type = NavType.FloatType; defaultValue = 17.78456f; nullable = false
+                            },
+                            navArgument("zoom"){
+                                type = NavType.FloatType; defaultValue = 7f; nullable = false
+                            }
+                        )
+                    ) {
+                        entry ->
+                        val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.04338
+                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 44.04338
+                        val zoom = entry.arguments?.getFloat("zoom") ?: 7f
                         CitiesMap(
                             modifier = Modifier.fillMaxSize(),
                             cities,
-                            onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") })
+                            onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") },
+                            latitude = latitude,
+                            longitude = longitude,
+                            zoom = zoom,
+                        )
                     }
                     composable(route = "map_of_landmarks"){
                         LandmarksMap(landmarks = landmarks, onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") } )

@@ -11,10 +11,10 @@ import com.mr.touristguide.core.model.City
 import com.mr.touristguide.core.model.Landmark
 
 @Composable
-fun CitiesMap(modifier: Modifier = Modifier, cities: List<City>?, onMarkerClick: (Int) -> Unit) {
+fun CitiesMap(modifier: Modifier = Modifier, cities: List<City>?, onMarkerClick: (Int) -> Unit, latitude:Double = 44.04338, longitude: Double = 17.78456, zoom: Float = 7f  ) {
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(44.04338, 17.78456), 7f)
+        position = CameraPosition.fromLatLngZoom(LatLng(latitude, longitude), zoom)
     }
     if(cities!=null) {
         Column(modifier = modifier) {

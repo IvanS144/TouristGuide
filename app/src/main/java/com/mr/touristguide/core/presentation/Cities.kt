@@ -1,16 +1,13 @@
 package com.mr.touristguide.core.presentation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -20,6 +17,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mr.touristguide.core.model.City
@@ -44,6 +42,7 @@ import com.mr.touristguide.weather.presentation.colors.DeepBlue
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import com.mr.touristguide.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,8 +66,12 @@ fun CityList(cities: List<City>, modifier: Modifier = Modifier, onItemClick: (Ci
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
-                        .clickable { onItemClick(item) }) {
+                        .clickable { onItemClick(item) }
+                    ) {
                         Text(text = item.name, style = TextStyle(fontSize = 16.sp))
+//                        Button(onClick = { /*TODO*/ }) {
+//                            Text(text = "Weather")
+//                        }
                     }
                 }
             }
@@ -79,7 +82,7 @@ fun CityList(cities: List<City>, modifier: Modifier = Modifier, onItemClick: (Ci
 
 @OptIn(ExperimentalPagingApi::class)
 @Composable
-fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int) -> Unit, searchViewModel: SearchViewModel) {
+fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int) -> Unit, showOnMap: () -> Unit, searchViewModel: SearchViewModel) {
     val images = searchViewModel.searchedImages.collectAsLazyPagingItems()
     val nameStyle = TextStyle(fontSize=40.sp, fontStyle = FontStyle.Italic)
     val context = LocalContext.current
@@ -92,7 +95,9 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
             youTubePlayer.cueVideo("5g4fhqCSdLQ", 0f)
         }
     })
-    LazyColumn(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    LazyColumn(modifier = Modifier
+        .fillMaxSize()
+        .padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = city.name, style = nameStyle)
@@ -105,12 +110,13 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
 //            Spacer(modifier = Modifier.height(5.dp))
 //        }
         item{
-            Surface(modifier = Modifier.fillMaxWidth(), shape= RoundedCornerShape(8.dp)) {
+            Surface(modifier = Modifier
+                .fillMaxWidth()
+                .shadow(elevation = 5.dp), shape= RoundedCornerShape(4.dp)) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(all = 4.dp)
-                    .shadow(elevation = 8.dp)
-                    .background(Color.Cyan)) {
+                    .background(Color.Cyan)
+                    .padding(all = 4.dp)){
                     Text(
                         text = city.shortDescription,
                         fontStyle = FontStyle.Italic,
@@ -120,13 +126,27 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
                 }
             }
         }
+        item {
+            Row(modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween) {
+                Button(onClick = { openWeather(city.id) }) {
+                    Text("View weather forecast")
+
+                }
+                Button(onClick = { showOnMap() }) {
+                    Text("Show on map")
+                }
+            }
+        }
 //        item{
 //            Spacer(modifier = Modifier
 //                .height(10.dp)
 //                .background(Color.Transparent))
 //        }
         item{
-            AndroidView(factory = {
+            Surface(modifier = Modifier.shadow(elevation = 5.dp), shape = RoundedCornerShape(8.dp)) {
+                AndroidView(factory = {
 //                var view = YouTubePlayerView(it)
 //                LocalLifecycleOwner.current.lifecycle.addObserver(view)
 //                val fragment = view.addYouTubePlayerListener(
@@ -138,17 +158,21 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
 //                    }
 //                )
 //                view
-                youtubePlayerView
-            })
+                    youtubePlayerView
+                })
+            }
         }
 //        item{
 //            Spacer(modifier= Modifier.height(5.dp))
 //        }
         item{
-            Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(8.dp)) {
+            Surface(modifier = Modifier
+                .fillMaxWidth()
+                .shadow(elevation = 5.dp), shape = RoundedCornerShape(4.dp)) {
                 Column(modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(elevation = 8.dp)) {
+                    .background(Color.Cyan)
+                    .padding(all = 4.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -196,16 +220,14 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
 //        TODO tabela statistike
         //placeholder text
         item {
-            Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(8.dp)) {
-                Row(modifier = Modifier.fillMaxWidth().shadow(elevation = 8.dp)) {
+            Surface(modifier = Modifier
+                .fillMaxWidth()
+                .shadow(elevation = 5.dp), shape = RoundedCornerShape(8.dp)) {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Cyan)
+                    .padding(all = 4.dp)) {
                     Text(text = city.mainDescription, fontSize = 16.sp)
-                }
-            }
-        }
-        item {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Button(onClick = { openWeather(city.id) }) {
-
                 }
             }
         }

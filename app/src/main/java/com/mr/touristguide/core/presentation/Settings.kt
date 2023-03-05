@@ -1,7 +1,10 @@
 package com.mr.touristguide.core.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +20,11 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel
 ) {
     val maxImagesValues = listOf(10, 20, 50, 100 )
-    Column(modifier = Modifier.fillMaxSize().padding(all=5.dp)) {
+    val scrollState = rememberScrollState()
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(scrollState)
+        .padding(all = 5.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
 //        Surface(modifier = Modifier.padding(all=4.dp), shape = MaterialTheme.shapes.small) {
 //            Column(horizontalAlignment = Alignment.Start, modifier = Modifier.background(Color.LightGray)) {
                 Row(){

@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,6 +32,7 @@ import coil.request.ImageRequest
 import com.mr.touristguide.core.data.remote.UnsplashImage
 import com.mr.touristguide.ui.theme.HeartRed
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImagePainter
@@ -44,8 +46,9 @@ fun UnsplashItem(unsplashImage: UnsplashImage) {
         .placeholder(R.drawable.ic_placeholder)
         .build())
     val context = LocalContext.current
-    Box(
-        modifier = Modifier
+    Surface(modifier = Modifier.shadow(elevation = 5.dp), shape = RoundedCornerShape(8.dp)) {
+        Box(
+            modifier = Modifier
 //            .clickable {
 //                val browserIntent = Intent(
 //                    Intent.ACTION_VIEW,
@@ -53,56 +56,57 @@ fun UnsplashItem(unsplashImage: UnsplashImage) {
 //                )
 //                ContextCompat.startActivity(context, browserIntent, null)
 //            }
-            .height(300.dp)
-            .fillMaxWidth(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            painter = painter,
-            contentDescription = "Unsplash Image",
-            contentScale = ContentScale.Crop
-        )
-        Surface(
-            modifier = Modifier
-                .height(40.dp)
-                .fillMaxWidth()
-                .alpha(0.5f),
-            color = Color.Black
-        ) {}
-        Row(
-            modifier = Modifier
-                .height(40.dp)
-                .fillMaxWidth()
-                .padding(horizontal = 6.dp)
-                .clickable {
-                val browserIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://unsplash.com/@${unsplashImage.user.username}?utm_source=DemoApp&utm_medium=referral")
-                )
-                ContextCompat.startActivity(context, browserIntent, null)
-            },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .height(300.dp)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.BottomCenter
         ) {
-            Text(
-                text = buildAnnotatedString {
-                    append("Photo by ")
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Black)) {
-                        append(unsplashImage.user.username)
-                    }
-                    append(" on Unsplash")
-                },
-                color = Color.White,
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painter,
+                contentDescription = "Unsplash Image",
+                contentScale = ContentScale.Crop
             )
-            LikeCounter(
-                modifier = Modifier.weight(3f),
-                painter = painterResource(id = R.drawable.ic_heart),
-                likes = "${unsplashImage.likes}"
-            )
+            Surface(
+                modifier = Modifier
+                    .height(40.dp)
+                    .fillMaxWidth()
+                    .alpha(0.5f),
+                color = Color.Black
+            ) {}
+            Row(
+                modifier = Modifier
+                    .height(40.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 6.dp)
+                    .clickable {
+                        val browserIntent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://unsplash.com/@${unsplashImage.user.username}?utm_source=DemoApp&utm_medium=referral")
+                        )
+                        ContextCompat.startActivity(context, browserIntent, null)
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        append("Photo by ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Black)) {
+                            append(unsplashImage.user.username)
+                        }
+                        append(" on Unsplash")
+                    },
+                    color = Color.White,
+                    fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                LikeCounter(
+                    modifier = Modifier.weight(3f),
+                    painter = painterResource(id = R.drawable.ic_heart),
+                    likes = "${unsplashImage.likes}"
+                )
+            }
         }
     }
 }

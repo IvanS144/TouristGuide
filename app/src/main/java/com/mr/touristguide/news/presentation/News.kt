@@ -1,19 +1,18 @@
 package com.mr.touristguide.news.presentation
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
@@ -34,8 +33,8 @@ fun NewsScreen(news: NewsDto, onHeadlineClick: (HeadlineDto) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(all = 5.dp),
-        verticalArrangement = Arrangement.spacedBy(5.dp),
+            .padding(all = 4.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(items = news.articles) { headline ->
@@ -54,30 +53,45 @@ fun HeadlinePreview(
     modifier: Modifier = Modifier,
     onClick: (HeadlineDto) -> Unit
 ) {
-    Surface(modifier = modifier
-        .padding(all = 2.dp)
-        .clickable { onClick(headline) },
-        shape = MaterialTheme.shapes.small,
-        border = BorderStroke(1.dp, Color.Black)
+    Surface(modifier = modifier.shadow(elevation = 5.dp).clickable{onClick(headline)},
+        shape = RoundedCornerShape(8.dp),
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 2.dp), horizontalArrangement = Arrangement.Center
+                .background(Color.Cyan)
+                .padding(all = 4.dp), verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+//            Column(
+//                verticalArrangement = Arrangement.Center,
+//                modifier = Modifier.fillMaxWidth()
+//            ) {
                 Text(text = headline.title, style = titleTextStyle)
                 Text(text = headline.source.name, style = sourceTextStyle)
+//                if(headline.urlToImage!=null){
+//                    Surface(shape= RoundedCornerShape(8.dp)) {
+//                        AsyncImage(
+//                            model = headline.urlToImage,
+//                            contentDescription = null,
+//                            contentScale = ContentScale.Crop,
+//                            modifier = Modifier.weight(1f),
+//                            )
+//                    }
+//                }
+//            }
+            if (headline.urlToImage != null) {
+                Surface(shape = RoundedCornerShape(8.dp)) {
+                    AsyncImage(
+                        model = headline.urlToImage,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.weight(1f)
+
+                    )
+                }
+
+
             }
-//            AsyncImage(
-//                model = headline.urlToImage,
-//                contentDescription = null,
-//                contentScale = ContentScale.Crop,
-//                modifier = Modifier.weight(1f)
-//
-//            )
-
-
         }
     }
 
