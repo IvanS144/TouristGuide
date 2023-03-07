@@ -10,9 +10,11 @@ import com.mr.touristguide.core.data.remote.CitiesApi
 import com.mr.touristguide.core.data.remote.ImagesApi
 import com.mr.touristguide.core.data.remote.LandmarksApi
 import com.mr.touristguide.core.data.repository.CityRepositoryImpl
+import com.mr.touristguide.core.data.repository.CountryRepositoryImpl
 import com.mr.touristguide.core.data.repository.ImageRepositoryImpl
 import com.mr.touristguide.core.data.repository.LandmarkRepositoryImpl
 import com.mr.touristguide.core.domain.repository.CityRepository
+import com.mr.touristguide.core.domain.repository.CountryRepository
 import com.mr.touristguide.core.domain.repository.ImageRepository
 import com.mr.touristguide.core.domain.repository.LandmarkRepository
 import dagger.Binds
@@ -115,4 +117,8 @@ abstract class AppRepositoryModules{
     @Binds
     @Singleton
     abstract fun bindImageRepository(imageRepositoryImpl: ImageRepositoryImpl): ImageRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCountryRepository(countryRepositoryImpl: CountryRepositoryImpl): CountryRepository
 }

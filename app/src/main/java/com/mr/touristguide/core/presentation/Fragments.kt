@@ -49,11 +49,6 @@ fun Settings() {
 }
 
 @Composable
-fun Home() {
-    Greeting(name = "Home")
-}
-
-@Composable
 fun Favorites() {
     Greeting(name = "Favorites")
 }

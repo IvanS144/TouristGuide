@@ -1,12 +1,15 @@
 package com.mr.touristguide.core.presentation.data
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mr.touristguide.core.domain.repository.CityRepository
+import com.mr.touristguide.core.domain.repository.CountryRepository
 import com.mr.touristguide.core.domain.repository.LandmarkRepository
+import com.mr.touristguide.core.model.Country
 import com.mr.touristguide.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class GuideViewModel @Inject constructor(
     private val cityRepository: CityRepository,
-    private val landmarkRepository: LandmarkRepository
+    private val landmarkRepository: LandmarkRepository,
+    private val countryRepository: CountryRepository
     ) : ViewModel(){
 //    private val api: CitiesApi = Retrofit.Builder()
 //        .baseUrl("https://63cacd0ff36cbbdfc76091ca.mockapi.io")
@@ -27,8 +31,10 @@ class GuideViewModel @Inject constructor(
     private set
     var landmarksState by mutableStateOf(LandmarksState())
     private set
+    var country : MutableState<Country?> = mutableStateOf(null)
 
     init{
+        loadCountry()
         loadCities()
         loadLandmarks()
     }
@@ -80,6 +86,12 @@ class GuideViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun loadCountry(){
+        viewModelScope.launch {
+            country = mutableStateOf(countryRepository.getCountry())
         }
     }
 }

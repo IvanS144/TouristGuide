@@ -29,6 +29,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.mr.touristguide.core.presentation.data.MenuItem
 import com.mr.touristguide.core.model.City
+import com.mr.touristguide.core.model.Country
 import com.mr.touristguide.core.model.Landmark
 import com.mr.touristguide.core.presentation.data.ImagesViewModel
 import com.mr.touristguide.core.presentation.data.SearchViewModel
@@ -46,6 +47,7 @@ import kotlinx.coroutines.launch
 fun NavigationDrawerScreen(
     cities: List<City>?,
     landmarks: List<Landmark>?,
+    country: Country?,
     weatherState: WeatherState,
     newsState: NewsState,
     loadWeather: (City) -> Unit,
@@ -111,12 +113,6 @@ fun NavigationDrawerScreen(
             itemText = "Map of landmarks",
             contentDescription = "Go to map of landmarks",
             icon = Icons.Default.LocationOn
-        ),
-        MenuItem(
-            id = "images",
-            itemText = "Map of landmarks",
-            contentDescription = "Go to map of landmarks",
-            icon = Icons.Default.LocationOn
         )
     )
     ModalNavigationDrawer(
@@ -153,7 +149,13 @@ fun NavigationDrawerScreen(
                 )
                 {
                     composable(route = "home") {
-                        Home()
+                        if(country!=null) {
+                            Home(
+                                country = country,
+                                imagesViewModel = imagesViewModel,
+                                openCitiesMap = { navController.navigate(route = "map_of_cities") },
+                                openLandmarksMap = { navController.navigate(route = "map_of_landmarks") })
+                        }
                     }
                     composable(route = "cities") {
                         if (cities != null) {
@@ -161,7 +163,7 @@ fun NavigationDrawerScreen(
                                 cities = cities,
                                 modifier = Modifier.fillMaxSize(),
                                 onItemClick = { item -> navController.navigate(route = "cities/${item.id}") },
-                            onFloatingButtonClick = {navController.navigate("citiesmap")})
+                            onFloatingButtonClick = {navController.navigate(route = "map_of_cities")})
                         }
                     }
                     composable(route = "landmarks") {
@@ -170,7 +172,7 @@ fun NavigationDrawerScreen(
                                 landmarks = landmarks,
                                 modifier = Modifier.fillMaxSize(),
                                 onItemClick = { item -> navController.navigate(route = "landmarks/${item.id}") },
-                                onFloatingButtonClick = { navController.navigate(route = "landmarksmap") })
+                                onFloatingButtonClick = { navController.navigate(route = "map_of_landmarks") })
                         }
                     }
                     composable(route = "news") {
@@ -298,9 +300,6 @@ fun NavigationDrawerScreen(
                                 Article(headline = headline)
                             }
                         }
-                    }
-                    composable(route="images"){
-                        ImagesList(items = getAllImages)
                     }
                 }
 //            }

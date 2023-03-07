@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface ImagesApi {
     @Headers("Authorization: Client-ID ${BuildConfig.UNSPLASH_API_KEY}")
-    @GET("/photos")
+    @GET("/search/photos?query=srbija")
     suspend fun getAllImages(
         @Query("page") page: Int,
         @Query("per_page") perPage: Int

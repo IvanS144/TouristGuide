@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -53,7 +54,9 @@ fun HeadlinePreview(
     modifier: Modifier = Modifier,
     onClick: (HeadlineDto) -> Unit
 ) {
-    Surface(modifier = modifier.shadow(elevation = 5.dp).clickable{onClick(headline)},
+    Surface(modifier = modifier
+        .shadow(elevation = 5.dp)
+        .clickable { onClick(headline) },
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(
@@ -108,24 +111,25 @@ fun Article(modifier: Modifier = Modifier, headline: HeadlineDto) {
     ) {
         Text(text = headline.title, style = titleTextStyle)
         Text(text = headline.source.name, fontSize = 18.sp)
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         if (headline.urlToImage != null) {
-            Surface(shape=MaterialTheme.shapes.small) {
+            Surface(shape= RoundedCornerShape(8.dp)) {
                 AsyncImage(
                     model = headline.urlToImage,
                     contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.weight(1f),
-
+                    contentScale = ContentScale.Crop
                     )
             }
         }
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(12.dp))
         if (headline.description != null)
-            Text(text = headline.description, fontSize = 19.sp, fontStyle = FontStyle.Italic)
-        Spacer(modifier = Modifier.height(5.dp))
-        if (headline.content != null)
-            Text(text = headline.content, fontSize = 20.sp)
+            Text(text = headline.description, fontSize = 20.sp, fontStyle = FontStyle.Italic)
+//        Spacer(modifier = Modifier.height(12.dp))
+        if (headline.content != null) {
+            Divider(thickness = 2.dp, color = Color.Black)
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(text = headline.content, fontSize = 18.sp)
+        }
     }
 
 }
