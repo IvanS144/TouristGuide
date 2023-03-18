@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mr.touristguide.R
 import com.mr.touristguide.core.data.mappers.mapToLandmarks
+import com.mr.touristguide.core.data.preferences.PreferencesRepository
 import com.mr.touristguide.core.data.remote.LandmarksApi
 import com.mr.touristguide.core.domain.repository.LandmarkRepository
 import com.mr.touristguide.core.model.City
@@ -15,11 +16,20 @@ import kotlinx.coroutines.withContext
 import java.nio.charset.Charset
 import javax.inject.Inject
 
-class LandmarkRepositoryImpl @Inject constructor(private val api: LandmarksApi, private val app: Application) : LandmarkRepository {
+class LandmarkRepositoryImpl @Inject constructor(private val api: LandmarksApi, private val app: Application, private val preferencesRepository: PreferencesRepository) : LandmarkRepository {
     private val gson: Gson = Gson()
     override suspend fun getLandmarks(): Resource<List<Landmark>> {
+        val favorites = preferencesRepository.getFavoriteLandmarks()
         return try{
-            Resource.Success(mapToLandmarks(api.getLandmarks()))
+            val landmarks = mapToLandmarks(api.getLandmarks())
+            if(favorites.isNotEmpty()) {
+                landmarks.forEach { landmark ->
+                    if (favorites.contains(landmark.id.toString())) {
+                        landmark.isFavorite = true
+                    }
+                }
+            }
+            Resource.Success(landmarks)
         }
         catch(e: Exception){
             println("Landmarks error")
@@ -30,9 +40,30 @@ class LandmarkRepositoryImpl @Inject constructor(private val api: LandmarksApi, 
             }
             val typeToken = object: TypeToken<List<Landmark>>(){}.type
             val landmarks: List<Landmark> = gson.fromJson(json, typeToken)
+            if(favorites.isNotEmpty()) {
+                landmarks.forEach { landmark ->
+                    if (favorites.contains(landmark.id.toString())) {
+                        landmark.isFavorite = true
+                    }
+                }
+            }
             Resource.Error(message = "An error occurred", data = landmarks)
         }
 
+    }
+
+    override suspend fun getFavoriteLandmarks(): List<Landmark>? {
+        val favoriteLandmarkIdSet: Set<String> = preferencesRepository.getFavoriteLandmarks()
+        val landmarks = getLandmarks().data
+        return landmarks?.filter { landmark -> favoriteLandmarkIdSet.contains(landmark.id.toString()) }?.toList()
+    }
+
+    override suspend fun addToFavoriteLandmarks(id: Int) {
+        preferencesRepository.addToFavoriteLandmarks(id.toString())
+    }
+
+    override suspend fun removeFromFavoriteLandmarks(id: Int) {
+        preferencesRepository.removeFromFavoriteLandmarks(id.toString())
     }
 
 }

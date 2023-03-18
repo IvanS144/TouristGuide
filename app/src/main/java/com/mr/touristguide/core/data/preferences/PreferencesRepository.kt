@@ -5,4 +5,7 @@ interface PreferencesRepository {
     suspend fun setMaxImages(maxImages: Int)
     suspend fun getNewsCachingEnabled(): Boolean
     suspend fun setNewsCachingEnabled(newsCachingEnabled: Boolean)
+    suspend fun addToFavoriteLandmarks(id: String)
+    suspend fun removeFromFavoriteLandmarks(id: String)
+    suspend fun getFavoriteLandmarks(): Set<String>
 }

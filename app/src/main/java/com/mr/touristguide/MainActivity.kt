@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -21,7 +22,7 @@ import com.mr.touristguide.weather.presentation.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     private val viewModel: GuideViewModel by viewModels()
     private val weatherViewModel: WeatherViewModel by viewModels()
     private val newsViewModel: NewsViewModel by viewModels()
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TouristGuideTheme {
-                NavigationDrawerScreen(cities = viewModel.citiesState.cities, landmarks = viewModel.landmarksState.landmarks, country = viewModel.country.value, weatherState = weatherViewModel.state, newsState = newsViewModel.state , loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) }, settingsViewModel=settingsViewModel)
+                NavigationDrawerScreen(cities = viewModel.citiesState.cities, landmarks = viewModel.landmarksState.landmarks, country = viewModel.country.value, weatherState = weatherViewModel.state, newsState = newsViewModel.state , loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) }, settingsViewModel=settingsViewModel, guideViewModel = viewModel)
 
             }
         }

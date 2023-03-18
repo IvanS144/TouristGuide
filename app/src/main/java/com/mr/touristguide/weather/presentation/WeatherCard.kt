@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -23,6 +24,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 import com.mr.touristguide.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherCard(
     state: WeatherState,
@@ -42,7 +44,7 @@ fun WeatherCard(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Today ${
+                    text = "${stringResource(id = R.string.today)} ${
                         data.time.format(
                             DateTimeFormatter.ofPattern("HH:mm")
                         )

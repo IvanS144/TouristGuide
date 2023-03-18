@@ -33,6 +33,7 @@ import com.mr.touristguide.core.data.remote.UnsplashImage
 import com.mr.touristguide.ui.theme.HeartRed
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImagePainter
@@ -124,7 +125,7 @@ fun LikeCounter(
     ) {
         Icon(
             painter = painter,
-            contentDescription = "Heart Icon",
+            contentDescription = stringResource(id = R.string.heart_icon),
             tint = HeartRed
         )
         Divider(modifier = Modifier.width(6.dp))
@@ -164,7 +165,7 @@ fun FullscreenImage(unsplashImage: UnsplashImage) {
     Image(
         modifier = Modifier.fillMaxSize(),
         painter = painter,
-        contentDescription = "Unsplash Image",
+        contentDescription = stringResource(id = R.string.unsplash_image),
         contentScale = ContentScale.Fit
     )
     Row(
@@ -184,11 +185,11 @@ fun FullscreenImage(unsplashImage: UnsplashImage) {
     ) {
         Text(
             text = buildAnnotatedString {
-                append("Photo by ")
+                append(stringResource(id = R.string.photo_by))
                 withStyle(style = SpanStyle(fontWeight = FontWeight.Black)) {
                     append(unsplashImage.user.username)
                 }
-                append(" on Unsplash")
+                append(stringResource(id = R.string.on_unsplash))
             },
             color = Color.White,
             fontSize = MaterialTheme.typography.bodySmall.fontSize,

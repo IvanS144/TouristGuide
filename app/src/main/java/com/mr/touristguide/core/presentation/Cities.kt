@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mr.touristguide.core.model.City
@@ -50,7 +51,7 @@ fun CityList(cities: List<City>, modifier: Modifier = Modifier, onItemClick: (Ci
     Scaffold(modifier = modifier,
     floatingActionButton = {
         FloatingActionButton(onClick = { onFloatingButtonClick()},
-        shape= CircleShape) {
+        shape= CircleShape, containerColor = MaterialTheme.colorScheme.secondary, contentColor = MaterialTheme.colorScheme.onSecondary) {
 
 
         }
@@ -86,15 +87,15 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
     val images = searchViewModel.searchedImages.collectAsLazyPagingItems()
     val nameStyle = TextStyle(fontSize=40.sp, fontStyle = FontStyle.Italic)
     val context = LocalContext.current
-    val youtubePlayerView = YouTubePlayerView(context)
-    LocalLifecycleOwner.current.lifecycle.addObserver(youtubePlayerView)
-    youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-        override fun onReady(youTubePlayer: YouTubePlayer) {
-            super.onReady(youTubePlayer)
-//            youTubePlayer.loadVideo("5g4fhqCSdLQ", 0f)
-            youTubePlayer.cueVideo("5g4fhqCSdLQ", 0f)
-        }
-    })
+//    val youtubePlayerView = YouTubePlayerView(context)
+//    LocalLifecycleOwner.current.lifecycle.addObserver(youtubePlayerView)
+//    youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+//        override fun onReady(youTubePlayer: YouTubePlayer) {
+//            super.onReady(youTubePlayer)
+////            youTubePlayer.loadVideo("5g4fhqCSdLQ", 0f)
+//            youTubePlayer.cueVideo("5g4fhqCSdLQ", 0f)
+//        }
+//    })
     LazyColumn(modifier = Modifier
         .fillMaxSize()
         .padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -111,16 +112,16 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
 //        }
         item{
             Surface(modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 5.dp), shape= RoundedCornerShape(4.dp)) {
+                .fillMaxWidth(), shape= RoundedCornerShape(8.dp), shadowElevation = 5.dp) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Cyan)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
                     .padding(all = 4.dp)){
                     Text(
                         text = city.shortDescription,
                         fontStyle = FontStyle.Italic,
                         fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontSize = 18.sp
                     )
                 }
@@ -131,11 +132,11 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween) {
                 Button(onClick = { openWeather(city.id) }) {
-                    Text("View weather forecast")
+                    Text(text = stringResource(id = R.string.view_weather_forecast))
 
                 }
                 Button(onClick = { showOnMap() }) {
-                    Text("Show on map")
+                    Text(text = stringResource(id = R.string.show_on_map))
                 }
             }
         }
@@ -144,74 +145,73 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
 //                .height(10.dp)
 //                .background(Color.Transparent))
 //        }
-        item{
-            Surface(modifier = Modifier.shadow(elevation = 5.dp), shape = RoundedCornerShape(8.dp)) {
-                AndroidView(factory = {
-//                var view = YouTubePlayerView(it)
-//                LocalLifecycleOwner.current.lifecycle.addObserver(view)
-//                val fragment = view.addYouTubePlayerListener(
-//                    object : AbstractYouTubePlayerListener() {
-//                        override fun onReady(youTubePlayer: YouTubePlayer) {
-//                            super.onReady(youTubePlayer)
-//                            youTubePlayer.loadVideo("5g4fhqCSdLQ", 0f)
-//                        }
-//                    }
-//                )
-//                view
-                    youtubePlayerView
-                })
-            }
-        }
+//        item{
+//            Surface(shape = RoundedCornerShape(8.dp), shadowElevation = 5.dp) {
+//                AndroidView(factory = {
+////                var view = YouTubePlayerView(it)
+////                LocalLifecycleOwner.current.lifecycle.addObserver(view)
+////                val fragment = view.addYouTubePlayerListener(
+////                    object : AbstractYouTubePlayerListener() {
+////                        override fun onReady(youTubePlayer: YouTubePlayer) {
+////                            super.onReady(youTubePlayer)
+////                            youTubePlayer.loadVideo("5g4fhqCSdLQ", 0f)
+////                        }
+////                    }
+////                )
+////                view
+//                    youtubePlayerView
+//                })
+//            }
+//        }
 //        item{
 //            Spacer(modifier= Modifier.height(5.dp))
 //        }
         item{
             Surface(modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 5.dp), shape = RoundedCornerShape(4.dp)) {
+                .fillMaxWidth(), shape = RoundedCornerShape(8.dp), shadowElevation = 5.dp) {
                 Column(modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Cyan)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
                     .padding(all = 4.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                 }
             }
@@ -221,13 +221,12 @@ fun CityDetails(city: City, modifier: Modifier = Modifier, openWeather: (id: Int
         //placeholder text
         item {
             Surface(modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 5.dp), shape = RoundedCornerShape(8.dp)) {
+                .fillMaxWidth(), shape = RoundedCornerShape(8.dp), shadowElevation = 5.dp) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Cyan)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
                     .padding(all = 4.dp)) {
-                    Text(text = city.mainDescription, fontSize = 16.sp)
+                    Text(text = city.mainDescription, fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimaryContainer)
                 }
             }
         }

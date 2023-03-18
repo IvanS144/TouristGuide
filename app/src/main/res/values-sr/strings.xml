@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Turistučki vodič</string>
+    <string name="home_screen">Početna</string>
+    <string name="home_screen_cd">Idi na početni akran</string>
+    <string name="cities">Gradovi</string>
+    <string name="cities_cd">Idi na gradove</string>
+    <string name="landmarks">Znamenitosti</string>
+    <string name="landmarks_cd">Idi na znamenitosti</string>
+    <string name="settings">Podešavanja</string>
+    <string name="settings_cd">Idi na podešavanja</string>
+    <string name="favorite_landmarks">Omiljene znamenitorti</string>
+    <string name="favorite_landmarks_cd">Idi na omiljene znamenitosti</string>
+    <string name="news">Vijesti</string>
+    <string name="news_cd">Idi na vijesti</string>
+    <string name="map_of_cities">Mapa gradova</string>
+    <string name="map_of_cities_cd">Idi na mapu gradova</string>
+    <string name="map_of_landmarks">Mapa znamenitosti</string>
+    <string name="map_of_landmarks_cd">Idi na mapu znamenitsoti</string>
+    <string name="weather">Vremenska prognoza</string>
+    <string name="settings_num_of_images_option">Koliko slika želite da preuzmem tokom istraživanja gradova?</string>
+    <string name="unlimited">Neograničeno</string>
+    <string name="settings_news_caching_option">Omogući keširanje vijesti</string>
+    <string name="favorite_landmark_icon_description">Ikonica koja označava znamenitost kao omiljenu</string>
+    <string name="show_on_map">Prikaži na mapi</string>
+    <string name="heart_icon">Ikonica srce</string>
+    <string name="unsplash_image">Fotografija sa sajta Unsplash</string>
+    <string name="photo_by">Fotografisao</string>
+    <string name="on_unsplash">izvor: Unsplash</string>
+    <string name="open_map_of_cities">Otvori mapu gradova</string>
+    <string name="open_map_of_landmarks">Otvori mapu znamenitosti</string>
+    <string name="view_weather_forecast">Pogledaj prognozu</string>
+    <string name="toggle_navigation_drawer">Prikaži bočni navigacioni meni</string>
+    <string name="today">Danas</string>
+    <string name="locale">sr</string>
+    <string name="dropdown_arrow">Strelica ka dole</string>
+    <string name="language">Jezik</string>
+</resources>

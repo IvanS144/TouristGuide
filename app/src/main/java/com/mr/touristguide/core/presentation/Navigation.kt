@@ -15,6 +15,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,13 +30,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.mr.touristguide.core.presentation.data.MenuItem
+import com.mr.touristguide.R
 import com.mr.touristguide.core.model.City
 import com.mr.touristguide.core.model.Country
 import com.mr.touristguide.core.model.Landmark
-import com.mr.touristguide.core.presentation.data.ImagesViewModel
-import com.mr.touristguide.core.presentation.data.SearchViewModel
-import com.mr.touristguide.core.presentation.data.SettingsViewModel
+import com.mr.touristguide.core.presentation.data.*
 import com.mr.touristguide.news.presentation.Article
 import com.mr.touristguide.news.presentation.NewsScreen
 import com.mr.touristguide.news.presentation.NewsState
@@ -52,7 +53,8 @@ fun NavigationDrawerScreen(
     newsState: NewsState,
     loadWeather: (City) -> Unit,
     imagesViewModel: ImagesViewModel = hiltViewModel(),
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    guideViewModel: GuideViewModel
 ) {
 //    val scaffoldState = rememberScaffoldState()
 //    var title by remember { mutableStateOf("Home") }
@@ -60,7 +62,27 @@ fun NavigationDrawerScreen(
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val route = backStackEntry?.destination?.route ?: "Home"
-    val currentScreenTitle = getTitleByRoute(route)
+    val currentScreenTitle: String = if (route == "home") {
+        stringResource(id = R.string.home_screen)
+    } else if (route == "cities" || route.startsWith("cities")) {
+        stringResource(id = R.string.cities)
+    } else if (route == "news" || route.startsWith("articles")) {
+        stringResource(id = R.string.news)
+    } else if (route == "landmarks" || route.startsWith("landmarks")) {
+        stringResource(id = R.string.landmarks)
+    } else if (route == "favorites") {
+        stringResource(id = R.string.favorite_landmarks)
+    } else if (route == "settings") {
+        stringResource(id = R.string.settings)
+    } else if (route == "map_of_cities") {
+        stringResource(id = R.string.map_of_cities)
+    } else if (route == "map_of_landmarks") {
+        stringResource(id = R.string.map_of_landmarks)
+    } else if (route.startsWith("weather")) {
+        stringResource(id = R.string.weather)
+    } else {
+        stringResource(id = R.string.app_name)
+    }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val getAllImages = imagesViewModel.getAllImages.collectAsLazyPagingItems()
 //    viewModel.loadCities()
@@ -68,50 +90,50 @@ fun NavigationDrawerScreen(
     val items = listOf<MenuItem>(
         MenuItem(
             id = "home",
-            itemText = "Home",
-            contentDescription = "Go to home screen",
+            itemText = stringResource(id = R.string.home_screen),
+            contentDescription = stringResource(id = R.string.home_screen_cd),
             icon = Icons.Default.Home
         ),
         MenuItem(
             id = "cities",
-            itemText = "Cities",
-            contentDescription = "Go to landmarks screen",
+            itemText = stringResource(id = R.string.cities),
+            contentDescription = stringResource(id = R.string.cities_cd),
             icon = Icons.Default.LocationOn
         ),
         MenuItem(
             id = "landmarks",
-            itemText = "Landmarks",
-            contentDescription = "Go to landmarks screen",
+            itemText = stringResource(id = R.string.landmarks),
+            contentDescription = stringResource(id = R.string.landmarks_cd),
             icon = Icons.Default.LocationOn
         ),
         MenuItem(
             id = "settings",
-            itemText = "Settings",
-            contentDescription = "Go to settings",
+            itemText = stringResource(id = R.string.settings),
+            contentDescription = stringResource(id = R.string.settings_cd),
             icon = Icons.Default.Settings
         ),
         MenuItem(
             id = "favorites",
-            itemText = "Favorite locations",
-            contentDescription = "Go to favorite locations screen",
+            itemText = stringResource(id = R.string.favorite_landmarks),
+            contentDescription = stringResource(id = R.string.favorite_landmarks_cd),
             icon = Icons.Default.Favorite
         ),
         MenuItem(
             id = "news",
-            itemText = "News",
-            contentDescription = "Go to news screen",
+            itemText = stringResource(id = R.string.news),
+            contentDescription = stringResource(id = R.string.news_cd),
             icon = Icons.Default.Notifications
         ),
         MenuItem(
             id = "map_of_cities",
-            itemText = "Map of cities",
-            contentDescription = "Go to map of cities",
+            itemText = stringResource(id = R.string.map_of_cities),
+            contentDescription = stringResource(id = R.string.map_of_cities_cd),
             icon = Icons.Default.LocationOn
         ),
         MenuItem(
             id = "map_of_landmarks",
-            itemText = "Map of landmarks",
-            contentDescription = "Go to map of landmarks",
+            itemText = stringResource(id = R.string.map_of_landmarks),
+            contentDescription = stringResource(id = R.string.map_of_landmarks_cd),
             icon = Icons.Default.LocationOn
         )
     )
@@ -122,7 +144,8 @@ fun NavigationDrawerScreen(
                 items = items,
                 onItemClick = { item -> navController.navigate(route = item.id)})
         },
-        drawerState = drawerState
+        drawerState = drawerState,
+        drawerShape = RectangleShape
     ) {
         Scaffold(
             topBar = {
@@ -182,7 +205,14 @@ fun NavigationDrawerScreen(
                         SettingsScreen(settingsViewModel = settingsViewModel)
                     }
                     composable(route = "favorites") {
-                        Favorites()
+                        val favoriteLandmarks = guideViewModel.favoriteLandmarks.value
+                        if(favoriteLandmarks!=null) {
+                            LandmarkList(
+                                landmarks = favoriteLandmarks,
+                                modifier = Modifier.fillMaxSize(),
+                                onItemClick = { item -> navController.navigate(route = "landmarks/${item.id}") },
+                                onFloatingButtonClick = { navController.navigate(route = "map_of_landmarks") })
+                        }
                     }
                     composable(
                         route = "cities/{id}",
@@ -224,7 +254,17 @@ fun NavigationDrawerScreen(
                                     landmark = selectedLandmark,
                                     modifier = Modifier.fillMaxSize(),
                                     showOnMap = { navController.navigate(route="map_of_cities?latitude=${selectedLandmark.latitude}&longitude=${selectedLandmark.longitude}&zoom=10.0")},
-                                    searchViewModel = searchViewModel
+                                    searchViewModel = searchViewModel,
+                                    onFavoriteButtonClicked = {landmark: Landmark ->
+                                        if(!landmark.isFavorite){
+                                            landmark.isFavorite = true
+                                            guideViewModel.addToFavoriteLandmarks(landmark.id)
+                                        }
+                                        else{
+                                            landmark.isFavorite = false
+                                            guideViewModel.removeFromFavoriteLandmarks(landmark.id)
+                                        }
+                                    }
                                 )
                             }
 
@@ -332,8 +372,11 @@ private fun getTitleByRoute(route: String) = if (route == "home") {
 
 @Composable
 fun DrawerHeader() {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "Tourist guide")
+    //TODO lokalizacija
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .background(MaterialTheme.colorScheme.secondary)) {
+        Text(text = "Tourist guide", color = MaterialTheme.colorScheme.onSecondary)
     }
 
 }
@@ -345,7 +388,10 @@ fun DrawerBody(
     itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
     onItemClick: (MenuItem) -> Unit
 ) {
-    LazyColumn(modifier) {
+    LazyColumn(
+        modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primaryContainer)) {
         items(items) { item ->
             Row(
                 modifier = Modifier

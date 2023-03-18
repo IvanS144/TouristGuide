@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +27,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.mr.touristguide.core.model.Country
 import com.mr.touristguide.core.presentation.data.ImagesViewModel
+import com.mr.touristguide.R
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -35,15 +38,15 @@ fun Home(modifier: Modifier = Modifier, country: Country, imagesViewModel: Image
     val images = imagesViewModel.getAllImages.collectAsLazyPagingItems()
     val nameStyle = TextStyle(fontSize=40.sp, fontStyle = FontStyle.Italic)
     val context = LocalContext.current
-    val youtubePlayerView = YouTubePlayerView(context)
-    LocalLifecycleOwner.current.lifecycle.addObserver(youtubePlayerView)
-    youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-        override fun onReady(youTubePlayer: YouTubePlayer) {
-            super.onReady(youTubePlayer)
-//            youTubePlayer.loadVideo("5g4fhqCSdLQ", 0f)
-            youTubePlayer.cueVideo("5g4fhqCSdLQ", 0f)
-        }
-    })
+//    val youtubePlayerView = YouTubePlayerView(context)
+//    LocalLifecycleOwner.current.lifecycle.addObserver(youtubePlayerView)
+//    youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+//        override fun onReady(youTubePlayer: YouTubePlayer) {
+//            super.onReady(youTubePlayer)
+////            youTubePlayer.loadVideo("5g4fhqCSdLQ", 0f)
+//            youTubePlayer.cueVideo("5g4fhqCSdLQ", 0f)
+//        }
+//    })
     LazyColumn(modifier = Modifier
         .fillMaxSize()
         .padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -60,18 +63,18 @@ fun Home(modifier: Modifier = Modifier, country: Country, imagesViewModel: Image
 //        }
         item{
             Surface(modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 5.dp), shape= RoundedCornerShape(4.dp)
+                .fillMaxWidth(), shape= RoundedCornerShape(8.dp), shadowElevation = 5.dp
             ) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Cyan)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
                     .padding(all = 4.dp)){
                     Text(
                         text = country.shortDescription,
                         fontStyle = FontStyle.Italic,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             }
@@ -81,11 +84,11 @@ fun Home(modifier: Modifier = Modifier, country: Country, imagesViewModel: Image
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Button(onClick = { openCitiesMap() }) {
-                    Text("Open map of cities")
+                    Text(text = stringResource(id = R.string.open_map_of_cities))
 
                 }
                 Button(onClick = { openLandmarksMap() }) {
-                    Text("Open map of landmarks")
+                    Text(text = stringResource(id = R.string.open_map_of_landmarks))
                 }
             }
         }
@@ -94,75 +97,74 @@ fun Home(modifier: Modifier = Modifier, country: Country, imagesViewModel: Image
 //                .height(10.dp)
 //                .background(Color.Transparent))
 //        }
-        item{
-            Surface(modifier = Modifier.shadow(elevation = 5.dp), shape = RoundedCornerShape(8.dp)) {
-                AndroidView(factory = {
-//                var view = YouTubePlayerView(it)
-//                LocalLifecycleOwner.current.lifecycle.addObserver(view)
-//                val fragment = view.addYouTubePlayerListener(
-//                    object : AbstractYouTubePlayerListener() {
-//                        override fun onReady(youTubePlayer: YouTubePlayer) {
-//                            super.onReady(youTubePlayer)
-//                            youTubePlayer.loadVideo("5g4fhqCSdLQ", 0f)
-//                        }
-//                    }
-//                )
-//                view
-                    youtubePlayerView
-                })
-            }
-        }
+//        item{
+//            Surface(modifier = Modifier.shadow(elevation = 5.dp), shape = RoundedCornerShape(8.dp)) {
+//                AndroidView(factory = {
+////                var view = YouTubePlayerView(it)
+////                LocalLifecycleOwner.current.lifecycle.addObserver(view)
+////                val fragment = view.addYouTubePlayerListener(
+////                    object : AbstractYouTubePlayerListener() {
+////                        override fun onReady(youTubePlayer: YouTubePlayer) {
+////                            super.onReady(youTubePlayer)
+////                            youTubePlayer.loadVideo("5g4fhqCSdLQ", 0f)
+////                        }
+////                    }
+////                )
+////                view
+//                    youtubePlayerView
+//                })
+//            }
+//        }
 //        item{
 //            Spacer(modifier= Modifier.height(5.dp))
 //        }
         item{
             Surface(modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 5.dp), shape = RoundedCornerShape(4.dp)
+                .fillMaxWidth(), shape = RoundedCornerShape(8.dp)
             ) {
                 Column(modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Cyan)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer)
                     .padding(all = 4.dp)) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "property1")
-                        Text(text = "value1")
+                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
                     }
                 }
             }
@@ -172,14 +174,13 @@ fun Home(modifier: Modifier = Modifier, country: Country, imagesViewModel: Image
         //placeholder text
         item {
             Surface(modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 5.dp), shape = RoundedCornerShape(8.dp)
+                .fillMaxWidth(), shape = RoundedCornerShape(8.dp), shadowElevation = 5.dp
             ) {
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Cyan)
+                    .background(MaterialTheme.colorScheme.primaryContainer)
                     .padding(all = 4.dp)) {
-                    Text(text = country.mainDescription, fontSize = 16.sp)
+                    Text(text = country.mainDescription, fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimaryContainer)
                 }
             }
         }

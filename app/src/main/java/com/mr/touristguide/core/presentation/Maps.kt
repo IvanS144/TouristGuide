@@ -35,7 +35,7 @@ fun CityMarkers(cities: List<City>, onMarkerClick: (Int) -> Unit) {
     for(city in cities) {
         Marker(
             state = rememberMarkerState(position = LatLng(city.latitude, city.longitude)),
-            title = "Marker1",
+            title = city.name,
             icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
             onClick = {onMarkerClick(city.id);  false}
         )
@@ -53,7 +53,8 @@ fun LandmarksMap(modifier: Modifier = Modifier, landmarks: List<Landmark>?, onMa
             GoogleMap(
                 cameraPositionState = cameraPositionState,
                 modifier = Modifier.weight(1f),
-                uiSettings = MapUiSettings(compassEnabled = true)
+                uiSettings = MapUiSettings(compassEnabled = true),
+
             ) {
                 LandmarkMarkers(landmarks, onMarkerClick)
             }
@@ -64,12 +65,12 @@ fun LandmarksMap(modifier: Modifier = Modifier, landmarks: List<Landmark>?, onMa
 
 @Composable
 fun LandmarkMarkers(landmarks: List<Landmark>, onMarkerClick: (Int) -> Unit) {
-    for(city in landmarks) {
+    for(landmark in landmarks) {
         Marker(
-            state = rememberMarkerState(position = LatLng(city.latitude, city.longitude)),
-            title = "Marker1",
+            state = rememberMarkerState(position = LatLng(landmark.latitude, landmark.longitude)),
+            title = landmark.name,
             icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
-            onClick = {onMarkerClick(city.id);  false}
+            onClick = {onMarkerClick(landmark.id);  false}
         )
     }
 }
