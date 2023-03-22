@@ -202,7 +202,7 @@ fun NavigationDrawerScreen(
                         News()
                     }
                     composable(route = "settings") {
-                        SettingsScreen(settingsViewModel = settingsViewModel)
+                        SettingsScreen(settingsViewModel = settingsViewModel, guideViewModel = guideViewModel)
                     }
                     composable(route = "favorites") {
                         val favoriteLandmarks = guideViewModel.favoriteLandmarks.value
@@ -300,7 +300,7 @@ fun NavigationDrawerScreen(
                     ) {
                         entry ->
                         val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.04338
-                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 44.04338
+                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 17.78456
                         val zoom = entry.arguments?.getFloat("zoom") ?: 7f
                         CitiesMap(
                             modifier = Modifier.fillMaxSize(),
@@ -314,7 +314,7 @@ fun NavigationDrawerScreen(
                     composable(route = "map_of_landmarks?latitude={latitude}&longitude={longitude}&zoom={zoom}"){
                             entry ->
                         val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.04338
-                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 44.04338
+                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 17.78456
                         val zoom = entry.arguments?.getFloat("zoom") ?: 7f
                         LandmarksMap(landmarks = landmarks, onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") }, latitude = latitude, longitude = longitude, zoom=zoom )
                     }

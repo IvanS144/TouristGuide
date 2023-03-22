@@ -14,7 +14,31 @@ class CountryRepositoryImpl @Inject constructor(val app: Application) : CountryR
     private val gson: Gson = Gson()
 
     override suspend fun getCountry(): Country{
-        val inputStream = app.baseContext.resources.openRawResource(R.raw.state)
+        val locale = app.applicationContext.getString(R.string.locale)
+//        var fileName = "state"
+//        if (locale != "en") {
+//            fileName = fileName + "_" + locale;
+//        }
+//        val packageName = app.packageName
+//        val identifier = app.baseContext.resources.getIdentifier(fileName, "raw", packageName)
+        val inputStream = app.applicationContext.resources.openRawResource(if (locale == "en") {
+            R.raw.state
+        } else {
+            R.raw.state_sr
+        })
+        val json = inputStream.readBytes().toString(Charset.defaultCharset())
+        withContext(Dispatchers.IO) {
+            inputStream.close()
+        }
+        return gson.fromJson(json, Country::class.java)
+    }
+
+    override suspend fun getCountry(locale: String): Country {
+        val inputStream = app.applicationContext.resources.openRawResource(if (locale == "en") {
+            R.raw.state
+        } else {
+            R.raw.state_sr
+        })
         val json = inputStream.readBytes().toString(Charset.defaultCharset())
         withContext(Dispatchers.IO) {
             inputStream.close()

@@ -14,25 +14,58 @@ import kotlinx.coroutines.withContext
 import java.nio.charset.Charset
 import javax.inject.Inject
 
-class CityRepositoryImpl @Inject constructor(private val api: CitiesApi, private val app: Application) : CityRepository{
+class CityRepositoryImpl @Inject constructor(
+    private val api: CitiesApi,
+    private val app: Application
+) : CityRepository {
     private val gson: Gson = Gson()
     override suspend fun getCities(): Resource<List<City>> {
-        return try{
-            println("request sent")
-            Resource.Success(
-                data = mapToCities(api.getCities())
-            )
-        }
-        catch(e: Exception){
-            println("ERROR")
-            val inputStream = app.baseContext.resources.openRawResource(R.raw.cities)
-            val json = inputStream.readBytes().toString(Charset.defaultCharset())
-            withContext(Dispatchers.IO) {
-                inputStream.close()
+//        return try{
+//            println("request sent")
+//            Resource.Success(
+//                data = mapToCities(api.getCities())
+//            )
+//        }
+//        catch(e: Exception){
+//            println("ERROR")
+        val locale = app.applicationContext.getString(R.string.locale)
+//        var fileName = "cities"
+//        if (locale != "en") {
+//            fileName = fileName + "_" + locale;
+//        }
+//        val packageName = app.packageName
+//        val identifier = app.baseContext.resources.getIdentifier(fileName, "raw", packageName)
+        val inputStream = app.applicationContext.resources.openRawResource(
+            if (locale == "en") {
+                R.raw.cities
+            } else {
+                R.raw.cities_sr
             }
-            val typeToken = object: TypeToken<List<City>>(){}.type
-            val cities: List<City> = gson.fromJson(json, typeToken)
-            return Resource.Error(message ="An error occurred", data = cities)
+        )
+        val json = inputStream.readBytes().toString(Charset.defaultCharset())
+        withContext(Dispatchers.IO) {
+            inputStream.close()
         }
+        val typeToken = object : TypeToken<List<City>>() {}.type
+        val cities: List<City> = gson.fromJson(json, typeToken)
+        return Resource.Error(message = "An error occurred", data = cities)
+//        }
+    }
+
+    override suspend fun getCities(locale: String): Resource<List<City>> {
+        val inputStream = app.applicationContext.resources.openRawResource(
+            if (locale == "en") {
+                R.raw.cities
+            } else {
+                R.raw.cities_sr
+            }
+        )
+        val json = inputStream.readBytes().toString(Charset.defaultCharset())
+        withContext(Dispatchers.IO) {
+            inputStream.close()
+        }
+        val typeToken = object : TypeToken<List<City>>() {}.type
+        val cities: List<City> = gson.fromJson(json, typeToken)
+        return Resource.Error(message = "An error occurred", data = cities)
     }
 }

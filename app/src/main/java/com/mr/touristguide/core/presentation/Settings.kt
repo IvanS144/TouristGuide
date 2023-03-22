@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
 import com.mr.touristguide.R
+import com.mr.touristguide.core.presentation.data.GuideViewModel
 import com.mr.touristguide.core.presentation.data.SettingsViewModel
 import java.util.*
 import kotlin.math.max
@@ -30,7 +31,8 @@ import kotlin.math.max
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    guideViewModel: GuideViewModel
 ) {
     val maxImagesValues = listOf(10, 20, 50, 100 )
     val scrollState = rememberScrollState()
@@ -67,13 +69,13 @@ fun SettingsScreen(
         }
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween){
             Text(text = stringResource(id = R.string.language))
-            LanguageSpinner(settingsViewModel = settingsViewModel)
+            LanguageSpinner(settingsViewModel = settingsViewModel, guideViewModel = guideViewModel)
         }
     }
 }
 
 @Composable
-fun LanguageSpinner(settingsViewModel: SettingsViewModel) {
+fun LanguageSpinner(settingsViewModel: SettingsViewModel, guideViewModel: GuideViewModel) {
     var expanded by remember { mutableStateOf(false) }
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
         Row(modifier = Modifier.clickable { expanded = !expanded }, horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
@@ -82,7 +84,7 @@ fun LanguageSpinner(settingsViewModel: SettingsViewModel) {
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded=false }) {
                 settingsViewModel.languagesList.forEach {
                     language ->
-                    DropdownMenuItem(text = { Text(text = language.name)}, onClick = { expanded = false; settingsViewModel.setLanguage(language);})
+                    DropdownMenuItem(text = { Text(text = language.name)}, onClick = { expanded = false; guideViewModel.loadEverything(language.tag); settingsViewModel.setLanguage(language);})
                 }
             }
         }
