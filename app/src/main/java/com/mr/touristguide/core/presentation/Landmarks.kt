@@ -295,8 +295,7 @@ fun LandmarkDetails(
                         .padding(all = 4.dp)
                 ) {
                     Text(
-                        text = landmark.mainDescription,
-                        fontSize = 16.sp,
+                        text = landmark.getDescription(),
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }

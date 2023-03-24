@@ -145,7 +145,8 @@ fun NavigationDrawerScreen(
                 onItemClick = { item -> navController.navigate(route = item.id)})
         },
         drawerState = drawerState,
-        drawerShape = RectangleShape
+        drawerShape = RectangleShape,
+        gesturesEnabled = drawerState.isOpen
     ) {
         Scaffold(
             topBar = {
@@ -173,9 +174,11 @@ fun NavigationDrawerScreen(
                 {
                     composable(route = "home") {
                         if(country!=null) {
+                            val searchViewModel = hiltViewModel<SearchViewModel>()
+                            searchViewModel.search("serbia")
                             Home(
                                 country = country,
-                                imagesViewModel = imagesViewModel,
+                                searchViewModel = searchViewModel,
                                 openCitiesMap = { navController.navigate(route = "map_of_cities") },
                                 openLandmarksMap = { navController.navigate(route = "map_of_landmarks") })
                         }
@@ -253,7 +256,7 @@ fun NavigationDrawerScreen(
                                 LandmarkDetails(
                                     landmark = selectedLandmark,
                                     modifier = Modifier.fillMaxSize(),
-                                    showOnMap = { navController.navigate(route="map_of_cities?latitude=${selectedLandmark.latitude}&longitude=${selectedLandmark.longitude}&zoom=10.0")},
+                                    showOnMap = { navController.navigate(route="map_of_landmarks?latitude=${selectedLandmark.latitude}&longitude=${selectedLandmark.longitude}&zoom=10.0")},
                                     searchViewModel = searchViewModel,
                                     onFavoriteButtonClicked = {landmark: Landmark ->
                                         if(!landmark.isFavorite){
@@ -288,10 +291,10 @@ fun NavigationDrawerScreen(
                         route = "map_of_cities?latitude={latitude}&longitude={longitude}&zoom={zoom}",
                         arguments = listOf(
                             navArgument("latitude"){
-                            type = NavType.FloatType; defaultValue = 44.04338f; nullable = false
+                            type = NavType.FloatType; defaultValue = 44.01292f; nullable = false
                         },
                             navArgument("longitude"){
-                                type = NavType.FloatType; defaultValue = 17.78456f; nullable = false
+                                type = NavType.FloatType; defaultValue = 20.90975f; nullable = false
                             },
                             navArgument("zoom"){
                                 type = NavType.FloatType; defaultValue = 7f; nullable = false
@@ -299,8 +302,8 @@ fun NavigationDrawerScreen(
                         )
                     ) {
                         entry ->
-                        val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.04338
-                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 17.78456
+                        val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.01292
+                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 20.90975
                         val zoom = entry.arguments?.getFloat("zoom") ?: 7f
                         CitiesMap(
                             modifier = Modifier.fillMaxSize(),
@@ -311,10 +314,21 @@ fun NavigationDrawerScreen(
                             zoom = zoom,
                         )
                     }
-                    composable(route = "map_of_landmarks?latitude={latitude}&longitude={longitude}&zoom={zoom}"){
+                    composable(route = "map_of_landmarks?latitude={latitude}&longitude={longitude}&zoom={zoom}",
+                        arguments = listOf(
+                            navArgument("latitude"){
+                                type = NavType.FloatType; defaultValue = 44.01292f; nullable = false
+                            },
+                            navArgument("longitude"){
+                                type = NavType.FloatType; defaultValue = 20.90975f; nullable = false
+                            },
+                            navArgument("zoom"){
+                                type = NavType.FloatType; defaultValue = 7f; nullable = false
+                            }
+                        )){
                             entry ->
-                        val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.04338
-                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 17.78456
+                        val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.01292
+                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 20.90975
                         val zoom = entry.arguments?.getFloat("zoom") ?: 7f
                         LandmarksMap(landmarks = landmarks, onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") }, latitude = latitude, longitude = longitude, zoom=zoom )
                     }

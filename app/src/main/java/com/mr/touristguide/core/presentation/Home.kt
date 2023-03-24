@@ -28,14 +28,15 @@ import androidx.paging.compose.items
 import com.mr.touristguide.core.model.Country
 import com.mr.touristguide.core.presentation.data.ImagesViewModel
 import com.mr.touristguide.R
+import com.mr.touristguide.core.presentation.data.SearchViewModel
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @OptIn(ExperimentalPagingApi::class)
 @Composable
-fun Home(modifier: Modifier = Modifier, country: Country, imagesViewModel: ImagesViewModel, openCitiesMap: () -> Unit, openLandmarksMap: ()-> Unit) {
-    val images = imagesViewModel.getAllImages.collectAsLazyPagingItems()
+fun Home(modifier: Modifier = Modifier, country: Country, searchViewModel: SearchViewModel, openCitiesMap: () -> Unit, openLandmarksMap: ()-> Unit) {
+    val images = searchViewModel.searchedImages.collectAsLazyPagingItems()
     val nameStyle = TextStyle(fontSize=40.sp, fontStyle = FontStyle.Italic)
     val context = LocalContext.current
 //    val youtubePlayerView = YouTubePlayerView(context)
@@ -126,45 +127,21 @@ fun Home(modifier: Modifier = Modifier, country: Country, imagesViewModel: Image
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.tertiaryContainer)
                     .padding(all = 4.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
-                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
-                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
-                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
-                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = "property1", color = MaterialTheme.colorScheme.onTertiaryContainer)
-                        Text(text = "value1", color = MaterialTheme.colorScheme.onTertiaryContainer)
+                    for(property in country.properties) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = property.key,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                            Text(
+                                text = property.value,
+                                color = MaterialTheme.colorScheme.onTertiaryContainer
+                            )
+                        }
                     }
                 }
             }

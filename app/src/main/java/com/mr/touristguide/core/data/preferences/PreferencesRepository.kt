@@ -8,4 +8,6 @@ interface PreferencesRepository {
     suspend fun addToFavoriteLandmarks(id: String)
     suspend fun removeFromFavoriteLandmarks(id: String)
     suspend fun getFavoriteLandmarks(): Set<String>
+    suspend fun getLocale(): String
+    suspend fun setLocale(locale: String)
 }

@@ -1,5 +1,6 @@
 package com.mr.touristguide.core.data.remote
 
+import com.mr.touristguide.core.model.Section
 import com.squareup.moshi.Json
 
 data class LandmarkDto(
@@ -14,5 +15,6 @@ data class LandmarkDto(
     @field:Json(name="latitude")
     val latitude: Double,
     @field:Json(name="longitude")
-    val longitude: Double
+    val longitude: Double,
+    val sections: List<Section>
 )

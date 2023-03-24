@@ -6,6 +6,7 @@ data class Country(
     val mainDescription: String,
     val mapCenterLatitude: Double,
     val mapCenterLongitude: Double,
-    val searchTerm: String
+    val searchTerm: String,
+    val properties: List<Property>
     ) {
 }

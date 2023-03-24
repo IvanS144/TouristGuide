@@ -4,7 +4,7 @@ import android.app.Application
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mr.touristguide.R
-import com.mr.touristguide.core.data.mappers.mapToCities
+//import com.mr.touristguide.core.data.mappers.mapToCities
 import com.mr.touristguide.core.data.remote.CitiesApi
 import com.mr.touristguide.core.domain.repository.CityRepository
 import com.mr.touristguide.core.model.City

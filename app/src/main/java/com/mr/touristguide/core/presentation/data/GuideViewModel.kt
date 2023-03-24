@@ -17,13 +17,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.mr.touristguide.R
+import com.mr.touristguide.core.data.preferences.PreferencesRepository
 
 @HiltViewModel
 class GuideViewModel @Inject constructor(
     private val cityRepository: CityRepository,
     private val landmarkRepository: LandmarkRepository,
     private val countryRepository: CountryRepository,
-    private val app: Application
+    private val app: Application,
+    private val preferencesRepository: PreferencesRepository
     ) : ViewModel(){
 //    private val api: CitiesApi = Retrofit.Builder()
 //        .baseUrl("https://63cacd0ff36cbbdfc76091ca.mockapi.io")
@@ -45,8 +48,9 @@ class GuideViewModel @Inject constructor(
     }
 
     fun loadEverything() {
-        val locale = app.applicationContext.resources.configuration.locales.get(0).country
+        //val locale = app.applicationContext.resources.configuration.locales.get(0).language
         viewModelScope.launch {
+            val locale = preferencesRepository.getLocale()
             listOf(
                 launch { loadCities(locale) },
                 launch { loadLandmarks(locale) },

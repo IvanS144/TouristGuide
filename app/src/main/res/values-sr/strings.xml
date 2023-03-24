@@ -27,8 +27,8 @@
     <string name="unsplash_image">Fotografija sa sajta Unsplash</string>
     <string name="photo_by">Fotografisao</string>
     <string name="on_unsplash">izvor: Unsplash</string>
-    <string name="open_map_of_cities">Otvori mapu gradova</string>
-    <string name="open_map_of_landmarks">Otvori mapu znamenitosti</string>
+    <string name="open_map_of_cities">Mapa gradova</string>
+    <string name="open_map_of_landmarks">Mapa znamenitosti</string>
     <string name="view_weather_forecast">Pogledaj prognozu</string>
     <string name="toggle_navigation_drawer">Prikaži bočni navigacioni meni</string>
     <string name="today">Danas</string>

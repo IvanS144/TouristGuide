@@ -1,5 +1,6 @@
 package com.mr.touristguide.core.data.remote
 
+import com.mr.touristguide.core.model.Section
 import com.squareup.moshi.Json
 
 data class CityDto(
@@ -16,5 +17,8 @@ data class CityDto(
     @field:Json(name="longitude")
     val longitude: Double,
     @field:Json(name="searchTerm")
-    val searchTerm: String
+    val searchTerm: String,
+    val videoUrl: String,
+    val sections: List<Section>,
+    val flagUrl: String
 )

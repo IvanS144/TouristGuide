@@ -42,7 +42,8 @@ private val app: Application
             maxImagesState = preferencesRepository.getMaxImages()
             newsCachingState = preferencesRepository.getNewsCachingEnabled()
 //            val currentLanguage = app.applicationContext.getString(R.string.locale)
-            val locale = app.applicationContext.resources.configuration.locales.get(0).country
+//            val locale = app.applicationContext.resources.configuration.locales.get(0).language
+            val locale = preferencesRepository.getLocale()
             languageText = if(locale=="en"){
                 "English"
             }
@@ -67,6 +68,9 @@ private val app: Application
 
     fun setLanguage(language: Language){
         languageText = language.name
+        viewModelScope.launch(Dispatchers.IO) {
+            preferencesRepository.setLocale(language.tag)
+        }
         AppCompatDelegate.setApplicationLocales(
             LocaleListCompat.forLanguageTags(language.tag)
         )
