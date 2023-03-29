@@ -1,6 +1,5 @@
 package com.mr.touristguide.core.presentation
 
-import com.mr.touristguide.R
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -13,11 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -25,27 +26,24 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
-import com.mr.touristguide.core.data.remote.UnsplashImage
-import com.mr.touristguide.ui.theme.HeartRed
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.stringResource
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
-import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.mr.touristguide.R
+import com.mr.touristguide.core.data.remote.UnsplashImage
+import com.mr.touristguide.ui.theme.HeartRed
 
 @Composable
 fun UnsplashItem(unsplashImage: UnsplashImage) {
-    val painter = rememberAsyncImagePainter(model = ImageRequest.Builder(LocalContext.current)
-        .data(unsplashImage.urls.regular)
-        .crossfade(1000)
-        .error((R.drawable.ic_placeholder))
-        .placeholder(R.drawable.ic_placeholder)
-        .build())
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(unsplashImage.urls.regular)
+            .crossfade(1000)
+            .error((R.drawable.ic_placeholder))
+            .placeholder(R.drawable.ic_placeholder)
+            .build()
+    )
     val context = LocalContext.current
     Surface(modifier = Modifier.shadow(elevation = 5.dp), shape = RoundedCornerShape(8.dp)) {
         Box(
@@ -146,21 +144,23 @@ fun ImagesList(items: LazyPagingItems<UnsplashImage>) {
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(all = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
-    ){
-        items(items = items, key = {unsplashImage -> unsplashImage.id}){
-            unsplashImage -> unsplashImage?.let{ UnsplashItem(unsplashImage = it)}
+    ) {
+        items(items = items, key = { unsplashImage -> unsplashImage.id }) { unsplashImage ->
+            unsplashImage?.let { UnsplashItem(unsplashImage = it) }
         }
     }
 }
 
 @Composable
 fun FullscreenImage(unsplashImage: UnsplashImage) {
-    val painter = rememberAsyncImagePainter(model = ImageRequest.Builder(LocalContext.current)
-        .data(unsplashImage.urls.regular)
-        .crossfade(1000)
-        .error((R.drawable.ic_placeholder))
-        .placeholder(R.drawable.ic_placeholder)
-        .build())
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(unsplashImage.urls.regular)
+            .crossfade(1000)
+            .error((R.drawable.ic_placeholder))
+            .placeholder(R.drawable.ic_placeholder)
+            .build()
+    )
     val context = LocalContext.current
     Image(
         modifier = Modifier.fillMaxSize(),

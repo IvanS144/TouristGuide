@@ -14,10 +14,10 @@ data class Landmark(
     val longitude: Double,
     var isFavorite: Boolean = false,
     val sections: List<Section>
-){
-    fun getDescription(): AnnotatedString{
+) {
+    fun getDescription(): AnnotatedString {
         var string = buildAnnotatedString { append("") }
-        for(section in sections){
+        for (section in sections) {
             string = string.plus(
                 AnnotatedString(
                     text = section.title,
@@ -25,7 +25,7 @@ data class Landmark(
                 )
             )
             string = buildAnnotatedString { append(string); append("\n") }
-            if(section.text!=null){
+            if (section.text != null) {
                 string = string.plus(
                     AnnotatedString(
                         text = section.text,
@@ -33,9 +33,9 @@ data class Landmark(
                     )
                 )
             }
-            if(section.sections!=null && section.sections.isNotEmpty()){
+            if (section.sections != null && section.sections.isNotEmpty()) {
                 string = buildAnnotatedString { append(string); append("\n\n") }
-                for(subsection in section.sections){
+                for (subsection in section.sections) {
                     string = string.plus(
                         AnnotatedString(
                             text = subsection.title,
@@ -43,7 +43,7 @@ data class Landmark(
                         )
                     )
                     string = buildAnnotatedString { append(string); append("\n") }
-                    if(section.text!=null){
+                    if (section.text != null) {
                         string = string.plus(
                             AnnotatedString(
                                 text = section.text,

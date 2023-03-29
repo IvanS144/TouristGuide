@@ -10,9 +10,7 @@ import com.mr.touristguide.util.Resource
 import com.mr.touristguide.util.networkBoundResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import java.util.UUID
 import javax.inject.Inject
 
 class NewsRepositoryImpl @Inject constructor(
@@ -23,18 +21,21 @@ class NewsRepositoryImpl @Inject constructor(
     private val articleDao = database.articleDao()
     override suspend fun getNews(): Resource<NewsDto> {
         var news: NewsDto = NewsDto()
-        val shouldFetch = withContext(Dispatchers.IO){preferencesRepository.getNewsCachingEnabled()}
+        val shouldFetch =
+            withContext(Dispatchers.IO) { preferencesRepository.getNewsCachingEnabled() }
         val articles = networkBoundResource(
-            query ={articleDao.getAllAsFlow()},
-            fetch = {news = api.getNews()
-                news.articles.map { headlineDto -> headlineDto.toArticle() } },
-            saveFetchResult = {articles ->
+            query = { articleDao.getAllAsFlow() },
+            fetch = {
+                news = api.getNews()
+                news.articles.map { headlineDto -> headlineDto.toArticle() }
+            },
+            saveFetchResult = { articles ->
                 database.withTransaction {
                     articleDao.clearData()
                     articleDao.insert(articles)
                 }
             },
-            shouldFetch = {shouldFetch}
+            shouldFetch = { shouldFetch }
         )
         articles.first().data?.let { news.articles = it.map { article -> article.toArticleDto() } }
         return Resource.Success(news)

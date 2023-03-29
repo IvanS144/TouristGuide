@@ -1,6 +1,5 @@
 package com.mr.touristguide.weather.domain.weather
 
-import com.mr.touristguide.weather.domain.weather.WeatherType
 import java.time.LocalDateTime
 
 data class WeatherData(

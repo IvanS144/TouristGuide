@@ -3,7 +3,6 @@
 package com.mr.touristguide.core.presentation
 
 import android.annotation.SuppressLint
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,9 +13,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -38,7 +35,6 @@ import com.mr.touristguide.core.presentation.data.*
 import com.mr.touristguide.news.presentation.Article
 import com.mr.touristguide.news.presentation.NewsScreen
 import com.mr.touristguide.news.presentation.NewsState
-import com.mr.touristguide.news.presentation.NewsViewModel
 import com.mr.touristguide.weather.presentation.WeatherState
 import kotlinx.coroutines.launch
 
@@ -142,7 +138,7 @@ fun NavigationDrawerScreen(
             DrawerHeader()
             DrawerBody(
                 items = items,
-                onItemClick = { item -> navController.navigate(route = item.id)})
+                onItemClick = { item -> navController.navigate(route = item.id) })
         },
         drawerState = drawerState,
         drawerShape = RectangleShape,
@@ -150,7 +146,9 @@ fun NavigationDrawerScreen(
     ) {
         Scaffold(
             topBar = {
-                AppBar(title = currentScreenTitle, onNavigationIconClick = { scope.launch { drawerState.open() } })
+                AppBar(
+                    title = currentScreenTitle,
+                    onNavigationIconClick = { scope.launch { drawerState.open() } })
             }
         )
         { it ->
@@ -161,201 +159,208 @@ fun NavigationDrawerScreen(
 //                    .padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding())
 //            )
 //            {
-                NavHost(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            top = it.calculateTopPadding(),
-                            bottom = it.calculateBottomPadding()
-                        ),
-                    navController = navController,
-                    startDestination = "home",
-                )
-                {
-                    composable(route = "home") {
-                        if(country!=null) {
-                            val searchViewModel = hiltViewModel<SearchViewModel>()
-                            searchViewModel.search("serbia")
-                            Home(
-                                country = country,
-                                searchViewModel = searchViewModel,
-                                openCitiesMap = { navController.navigate(route = "map_of_cities") },
-                                openLandmarksMap = { navController.navigate(route = "map_of_landmarks") })
-                        }
+            NavHost(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(
+                        top = it.calculateTopPadding(),
+                        bottom = it.calculateBottomPadding()
+                    ),
+                navController = navController,
+                startDestination = "home",
+            )
+            {
+                composable(route = "home") {
+                    if (country != null) {
+                        val searchViewModel = hiltViewModel<SearchViewModel>()
+                        searchViewModel.search("serbia")
+                        Home(
+                            country = country,
+                            searchViewModel = searchViewModel,
+                            openCitiesMap = { navController.navigate(route = "map_of_cities") },
+                            openLandmarksMap = { navController.navigate(route = "map_of_landmarks") })
                     }
-                    composable(route = "cities") {
-                        if (cities != null) {
-                            CityList(
-                                cities = cities,
-                                modifier = Modifier.fillMaxSize(),
-                                onItemClick = { item -> navController.navigate(route = "cities/${item.id}") },
-                            onFloatingButtonClick = {navController.navigate(route = "map_of_cities")})
-                        }
-                    }
-                    composable(route = "landmarks") {
-                        if(landmarks!=null) {
-                            LandmarkList(
-                                landmarks = landmarks,
-                                modifier = Modifier.fillMaxSize(),
-                                onItemClick = { item -> navController.navigate(route = "landmarks/${item.id}") },
-                                onFloatingButtonClick = { navController.navigate(route = "map_of_landmarks") })
-                        }
-                    }
-                    composable(route = "news") {
-                        News()
-                    }
-                    composable(route = "settings") {
-                        SettingsScreen(settingsViewModel = settingsViewModel, guideViewModel = guideViewModel)
-                    }
-                    composable(route = "favorites") {
-                        val favoriteLandmarks = guideViewModel.favoriteLandmarks.value
-                        if(favoriteLandmarks!=null) {
-                            LandmarkList(
-                                landmarks = favoriteLandmarks,
-                                modifier = Modifier.fillMaxSize(),
-                                onItemClick = { item -> navController.navigate(route = "landmarks/${item.id}") },
-                                onFloatingButtonClick = { navController.navigate(route = "map_of_landmarks") })
-                        }
-                    }
-                    composable(
-                        route = "cities/{id}",
-                        arguments = listOf(navArgument("id") {
-                            type = NavType.IntType; defaultValue = 1; nullable = false
-                        })
-                    ) { entry ->
-                        val id = entry.arguments?.getInt("id")
-                        if (id != null) {
-                            val selectedCity = cities?.first { city -> city.id == id }
-                            if (selectedCity != null) {
-                                //title = selectedCity.name
-                                val searchViewModel = hiltViewModel<SearchViewModel>()
-                                searchViewModel.updateSearchQuery(selectedCity.searchTerm)
-                                searchViewModel.search()
-                                CityDetails(
-                                    city = selectedCity,
-                                    modifier = Modifier.fillMaxSize(),
-                                    openWeather = { id: Int -> navController.navigate(route = "weather/${id}") },
-                                    showOnMap = { navController.navigate(route="map_of_cities?latitude=${selectedCity.latitude}&longitude=${selectedCity.longitude}&zoom=10.0")},
-                                searchViewModel)
-                            }
-                        }
-                    }
-                    composable(
-                        route = "landmarks/{id}",
-                        arguments = listOf(navArgument("id") {
-                            type = NavType.IntType; defaultValue = 1; nullable = false
-                        })
-                    ) { entry ->
-                        val id = entry.arguments?.getInt("id")
-                        if (id != null) {
-                            val selectedLandmark = landmarks?.first { landmark -> landmark.id == id }
-                            if(selectedLandmark!=null) {
-                                val searchViewModel = hiltViewModel<SearchViewModel>()
-                                searchViewModel.updateSearchQuery(selectedLandmark.name)
-                                searchViewModel.search()
-                                LandmarkDetails(
-                                    landmark = selectedLandmark,
-                                    modifier = Modifier.fillMaxSize(),
-                                    showOnMap = { navController.navigate(route="map_of_landmarks?latitude=${selectedLandmark.latitude}&longitude=${selectedLandmark.longitude}&zoom=10.0")},
-                                    searchViewModel = searchViewModel,
-                                    onFavoriteButtonClicked = {landmark: Landmark ->
-                                        if(!landmark.isFavorite){
-                                            landmark.isFavorite = true
-                                            guideViewModel.addToFavoriteLandmarks(landmark.id)
-                                        }
-                                        else{
-                                            landmark.isFavorite = false
-                                            guideViewModel.removeFromFavoriteLandmarks(landmark.id)
-                                        }
-                                    }
-                                )
-                            }
-
-                        }
-                    }
-                    composable(
-                        route = "weather/{id}",
-                        arguments = listOf(navArgument("id") {
-                            type = NavType.IntType; defaultValue = 1; nullable = false
-                        })
-                    ) { entry ->
-                        val id = entry.arguments?.getInt("id")
-                        if (id != null) {
-                            val selectedCity = cities?.first { city -> city.id == id }?.let {
-                                loadWeather(it)
-                                CityWeather(city = it, weatherState)
-                            }
-                        }
-                    }
-                    composable(
-                        route = "map_of_cities?latitude={latitude}&longitude={longitude}&zoom={zoom}",
-                        arguments = listOf(
-                            navArgument("latitude"){
-                            type = NavType.FloatType; defaultValue = 44.01292f; nullable = false
-                        },
-                            navArgument("longitude"){
-                                type = NavType.FloatType; defaultValue = 20.90975f; nullable = false
-                            },
-                            navArgument("zoom"){
-                                type = NavType.FloatType; defaultValue = 7f; nullable = false
-                            }
-                        )
-                    ) {
-                        entry ->
-                        val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.01292
-                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 20.90975
-                        val zoom = entry.arguments?.getFloat("zoom") ?: 7f
-                        CitiesMap(
+                }
+                composable(route = "cities") {
+                    if (cities != null) {
+                        CityList(
+                            cities = cities,
                             modifier = Modifier.fillMaxSize(),
-                            cities,
-                            onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") },
-                            latitude = latitude,
-                            longitude = longitude,
-                            zoom = zoom,
-                        )
+                            onItemClick = { item -> navController.navigate(route = "cities/${item.id}") },
+                            onFloatingButtonClick = { navController.navigate(route = "map_of_cities") })
                     }
-                    composable(route = "map_of_landmarks?latitude={latitude}&longitude={longitude}&zoom={zoom}",
-                        arguments = listOf(
-                            navArgument("latitude"){
-                                type = NavType.FloatType; defaultValue = 44.01292f; nullable = false
-                            },
-                            navArgument("longitude"){
-                                type = NavType.FloatType; defaultValue = 20.90975f; nullable = false
-                            },
-                            navArgument("zoom"){
-                                type = NavType.FloatType; defaultValue = 7f; nullable = false
-                            }
-                        )){
-                            entry ->
-                        val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.01292
-                        val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 20.90975
-                        val zoom = entry.arguments?.getFloat("zoom") ?: 7f
-                        LandmarksMap(landmarks = landmarks, onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") }, latitude = latitude, longitude = longitude, zoom=zoom )
+                }
+                composable(route = "landmarks") {
+                    if (landmarks != null) {
+                        LandmarkList(
+                            landmarks = landmarks,
+                            modifier = Modifier.fillMaxSize(),
+                            onItemClick = { item -> navController.navigate(route = "landmarks/${item.id}") },
+                            onFloatingButtonClick = { navController.navigate(route = "map_of_landmarks") })
                     }
-                    composable(route = "news") {
-//                        newsViewModel.loadNews()
-                        if(newsState.news!=null){
-                            NewsScreen(
-                                news = newsState.news,
-                                onHeadlineClick = { headline -> navController.navigate(route = "articles/${headline.id}") })
-                        }
+                }
+                composable(route = "news") {
+                    News()
+                }
+                composable(route = "settings") {
+                    SettingsScreen(
+                        settingsViewModel = settingsViewModel,
+                        guideViewModel = guideViewModel
+                    )
+                }
+                composable(route = "favorites") {
+                    val favoriteLandmarks = guideViewModel.favoriteLandmarks.value
+                    if (favoriteLandmarks != null) {
+                        LandmarkList(
+                            landmarks = favoriteLandmarks,
+                            modifier = Modifier.fillMaxSize(),
+                            onItemClick = { item -> navController.navigate(route = "landmarks/${item.id}") },
+                            onFloatingButtonClick = { navController.navigate(route = "map_of_landmarks") })
                     }
-                    composable(
-                        route = "articles/{id}",
-                        arguments = listOf(navArgument("id") {
-                            type = NavType.IntType; nullable = false
-                        })
-                    ) { entry ->
-                        val id = entry.arguments?.getInt("id")
-                        if(id!=null){
-                            val headline =
-                                newsState.news?.articles?.first { article -> article.id == id }
-                            if(headline!=null){
-                                Article(headline = headline)
-                            }
+                }
+                composable(
+                    route = "cities/{id}",
+                    arguments = listOf(navArgument("id") {
+                        type = NavType.IntType; defaultValue = 1; nullable = false
+                    })
+                ) { entry ->
+                    val id = entry.arguments?.getInt("id")
+                    if (id != null) {
+                        val selectedCity = cities?.first { city -> city.id == id }
+                        if (selectedCity != null) {
+                            //title = selectedCity.name
+                            val searchViewModel = hiltViewModel<SearchViewModel>()
+                            searchViewModel.updateSearchQuery(selectedCity.searchTerm)
+                            searchViewModel.search()
+                            CityDetails(
+                                city = selectedCity,
+                                modifier = Modifier.fillMaxSize(),
+                                openWeather = { id: Int -> navController.navigate(route = "weather/${id}") },
+                                showOnMap = { navController.navigate(route = "map_of_cities?latitude=${selectedCity.latitude}&longitude=${selectedCity.longitude}&zoom=10.0") },
+                                searchViewModel
+                            )
                         }
                     }
                 }
+                composable(
+                    route = "landmarks/{id}",
+                    arguments = listOf(navArgument("id") {
+                        type = NavType.IntType; defaultValue = 1; nullable = false
+                    })
+                ) { entry ->
+                    val id = entry.arguments?.getInt("id")
+                    if (id != null) {
+                        val selectedLandmark = landmarks?.first { landmark -> landmark.id == id }
+                        if (selectedLandmark != null) {
+                            val searchViewModel = hiltViewModel<SearchViewModel>()
+                            searchViewModel.updateSearchQuery(selectedLandmark.name)
+                            searchViewModel.search()
+                            LandmarkDetails(
+                                landmark = selectedLandmark,
+                                modifier = Modifier.fillMaxSize(),
+                                showOnMap = { navController.navigate(route = "map_of_landmarks?latitude=${selectedLandmark.latitude}&longitude=${selectedLandmark.longitude}&zoom=10.0") },
+                                searchViewModel = searchViewModel,
+                                onFavoriteButtonClicked = { landmark: Landmark ->
+                                    if (!landmark.isFavorite) {
+                                        landmark.isFavorite = true
+                                        guideViewModel.addToFavoriteLandmarks(landmark.id)
+                                    } else {
+                                        landmark.isFavorite = false
+                                        guideViewModel.removeFromFavoriteLandmarks(landmark.id)
+                                    }
+                                }
+                            )
+                        }
+
+                    }
+                }
+                composable(
+                    route = "weather/{id}",
+                    arguments = listOf(navArgument("id") {
+                        type = NavType.IntType; defaultValue = 1; nullable = false
+                    })
+                ) { entry ->
+                    val id = entry.arguments?.getInt("id")
+                    if (id != null) {
+                        val selectedCity = cities?.first { city -> city.id == id }?.let {
+                            loadWeather(it)
+                            CityWeather(city = it, weatherState)
+                        }
+                    }
+                }
+                composable(
+                    route = "map_of_cities?latitude={latitude}&longitude={longitude}&zoom={zoom}",
+                    arguments = listOf(
+                        navArgument("latitude") {
+                            type = NavType.FloatType; defaultValue = 44.01292f; nullable = false
+                        },
+                        navArgument("longitude") {
+                            type = NavType.FloatType; defaultValue = 20.90975f; nullable = false
+                        },
+                        navArgument("zoom") {
+                            type = NavType.FloatType; defaultValue = 7f; nullable = false
+                        }
+                    )
+                ) { entry ->
+                    val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.01292
+                    val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 20.90975
+                    val zoom = entry.arguments?.getFloat("zoom") ?: 7f
+                    CitiesMap(
+                        modifier = Modifier.fillMaxSize(),
+                        cities,
+                        onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") },
+                        latitude = latitude,
+                        longitude = longitude,
+                        zoom = zoom,
+                    )
+                }
+                composable(route = "map_of_landmarks?latitude={latitude}&longitude={longitude}&zoom={zoom}",
+                    arguments = listOf(
+                        navArgument("latitude") {
+                            type = NavType.FloatType; defaultValue = 44.01292f; nullable = false
+                        },
+                        navArgument("longitude") {
+                            type = NavType.FloatType; defaultValue = 20.90975f; nullable = false
+                        },
+                        navArgument("zoom") {
+                            type = NavType.FloatType; defaultValue = 7f; nullable = false
+                        }
+                    )) { entry ->
+                    val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.01292
+                    val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 20.90975
+                    val zoom = entry.arguments?.getFloat("zoom") ?: 7f
+                    LandmarksMap(
+                        landmarks = landmarks,
+                        onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") },
+                        latitude = latitude,
+                        longitude = longitude,
+                        zoom = zoom
+                    )
+                }
+                composable(route = "news") {
+//                        newsViewModel.loadNews()
+                    if (newsState.news != null) {
+                        NewsScreen(
+                            news = newsState.news,
+                            onHeadlineClick = { headline -> navController.navigate(route = "articles/${headline.id}") })
+                    }
+                }
+                composable(
+                    route = "articles/{id}",
+                    arguments = listOf(navArgument("id") {
+                        type = NavType.IntType; nullable = false
+                    })
+                ) { entry ->
+                    val id = entry.arguments?.getInt("id")
+                    if (id != null) {
+                        val headline =
+                            newsState.news?.articles?.first { article -> article.id == id }
+                        if (headline != null) {
+                            Article(headline = headline)
+                        }
+                    }
+                }
+            }
 //            }
         }
 
@@ -387,9 +392,11 @@ private fun getTitleByRoute(route: String) = if (route == "home") {
 @Composable
 fun DrawerHeader() {
     //TODO lokalizacija
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .background(MaterialTheme.colorScheme.secondary)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondary)
+    ) {
         Text(text = "Tourist guide", color = MaterialTheme.colorScheme.onSecondary)
     }
 
@@ -405,7 +412,8 @@ fun DrawerBody(
     LazyColumn(
         modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.primaryContainer)) {
+            .background(MaterialTheme.colorScheme.primaryContainer)
+    ) {
         items(items) { item ->
             Row(
                 modifier = Modifier

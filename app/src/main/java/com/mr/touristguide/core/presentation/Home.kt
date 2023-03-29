@@ -11,33 +11,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.mr.touristguide.core.model.Country
-import com.mr.touristguide.core.presentation.data.ImagesViewModel
 import com.mr.touristguide.R
+import com.mr.touristguide.core.model.Country
 import com.mr.touristguide.core.presentation.data.SearchViewModel
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 @OptIn(ExperimentalPagingApi::class)
 @Composable
-fun Home(modifier: Modifier = Modifier, country: Country, searchViewModel: SearchViewModel, openCitiesMap: () -> Unit, openLandmarksMap: ()-> Unit) {
+fun Home(
+    modifier: Modifier = Modifier,
+    country: Country,
+    searchViewModel: SearchViewModel,
+    openCitiesMap: () -> Unit,
+    openLandmarksMap: () -> Unit
+) {
     val images = searchViewModel.searchedImages.collectAsLazyPagingItems()
-    val nameStyle = TextStyle(fontSize=40.sp, fontStyle = FontStyle.Italic)
+    val nameStyle = TextStyle(fontSize = 40.sp, fontStyle = FontStyle.Italic)
     val context = LocalContext.current
 //    val youtubePlayerView = YouTubePlayerView(context)
 //    LocalLifecycleOwner.current.lifecycle.addObserver(youtubePlayerView)
@@ -48,9 +46,11 @@ fun Home(modifier: Modifier = Modifier, country: Country, searchViewModel: Searc
 //            youTubePlayer.cueVideo("5g4fhqCSdLQ", 0f)
 //        }
 //    })
-    LazyColumn(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 4.dp), verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         item {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Text(text = country.name, style = nameStyle)
@@ -62,14 +62,17 @@ fun Home(modifier: Modifier = Modifier, country: Country, searchViewModel: Searc
 //        item{
 //            Spacer(modifier = Modifier.height(5.dp))
 //        }
-        item{
-            Surface(modifier = Modifier
-                .fillMaxWidth(), shape= RoundedCornerShape(8.dp), shadowElevation = 5.dp
+        item {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(), shape = RoundedCornerShape(8.dp), shadowElevation = 5.dp
             ) {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(all = 4.dp)){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .padding(all = 4.dp)
+                ) {
                     Text(
                         text = country.shortDescription,
                         fontStyle = FontStyle.Italic,
@@ -81,9 +84,11 @@ fun Home(modifier: Modifier = Modifier, country: Country, searchViewModel: Searc
             }
         }
         item {
-            Row(modifier = Modifier.fillMaxWidth(),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween) {
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Button(onClick = { openCitiesMap() }) {
                     Text(text = stringResource(id = R.string.open_map_of_cities))
 
@@ -119,15 +124,18 @@ fun Home(modifier: Modifier = Modifier, country: Country, searchViewModel: Searc
 //        item{
 //            Spacer(modifier= Modifier.height(5.dp))
 //        }
-        item{
-            Surface(modifier = Modifier
-                .fillMaxWidth(), shape = RoundedCornerShape(8.dp)
+        item {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(), shape = RoundedCornerShape(8.dp)
             ) {
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.tertiaryContainer)
-                    .padding(all = 4.dp)) {
-                    for(property in country.properties) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
+                        .padding(all = 4.dp)
+                ) {
+                    for (property in country.properties) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
@@ -150,14 +158,21 @@ fun Home(modifier: Modifier = Modifier, country: Country, searchViewModel: Searc
 //        TODO tabela statistike
         //placeholder text
         item {
-            Surface(modifier = Modifier
-                .fillMaxWidth(), shape = RoundedCornerShape(8.dp), shadowElevation = 5.dp
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth(), shape = RoundedCornerShape(8.dp), shadowElevation = 5.dp
             ) {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(all = 4.dp)) {
-                    Text(text = country.mainDescription, fontSize = 16.sp, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .padding(all = 4.dp)
+                ) {
+                    Text(
+                        text = country.mainDescription,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
             }
         }
@@ -177,10 +192,11 @@ fun Home(modifier: Modifier = Modifier, country: Country, searchViewModel: Searc
 //                }
 //            }
 //        }
-        items(items = images, key = {unsplashImage -> unsplashImage.id}){
-                unsplashImage -> unsplashImage?.let{
+        items(items = images, key = { unsplashImage -> unsplashImage.id }) { unsplashImage ->
+            unsplashImage?.let {
 //            Spacer(modifier = Modifier.height(12.dp))
-            UnsplashItem(unsplashImage = it)}
+                UnsplashItem(unsplashImage = it)
+            }
         }
 
     }

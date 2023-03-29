@@ -4,5 +4,5 @@ import retrofit2.http.GET
 
 interface LandmarksApi {
     @GET("/api/v1/landmarks")
-    suspend fun getLandmarks() : List<LandmarkDto>
+    suspend fun getLandmarks(): List<LandmarkDto>
 }

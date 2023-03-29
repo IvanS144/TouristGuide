@@ -23,8 +23,8 @@ import javax.inject.Singleton
 object NewsModule {
     @Provides
     @Singleton
-    fun provideNewsApi(): NewsApi{
-        val client = OkHttpClient.Builder().apply{
+    fun provideNewsApi(): NewsApi {
+        val client = OkHttpClient.Builder().apply {
             addInterceptor(NewsInterceptor())
         }.build()
         return Retrofit.Builder()
@@ -36,14 +36,15 @@ object NewsModule {
 
     @Provides
     @Singleton
-    fun provideArticlesDatabase(app: Application): ArticlesDatabase{
-        return Room.databaseBuilder(app, ArticlesDatabase::class.java, "articles_database").fallbackToDestructiveMigration().build()
+    fun provideArticlesDatabase(app: Application): ArticlesDatabase {
+        return Room.databaseBuilder(app, ArticlesDatabase::class.java, "articles_database")
+            .fallbackToDestructiveMigration().build()
     }
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class NewsRepositoryModule{
+abstract class NewsRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindNewsRepository(newsRepositoryImpl: NewsRepositoryImpl): NewsRepository

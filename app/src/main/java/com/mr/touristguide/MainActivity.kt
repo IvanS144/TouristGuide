@@ -3,7 +3,6 @@
 package com.mr.touristguide
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.ExperimentalPagingApi
 import com.mr.touristguide.core.presentation.NavigationDrawerScreen
@@ -28,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val weatherViewModel: WeatherViewModel by viewModels()
     private val newsViewModel: NewsViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
+
     @OptIn(ExperimentalPagingApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +34,16 @@ class MainActivity : AppCompatActivity() {
 //            val locale = stringResource(id = R.string.locale)
 //            viewModel.loadEverything(locale)
             TouristGuideTheme {
-                NavigationDrawerScreen(cities = viewModel.citiesState.cities, landmarks = viewModel.landmarksState.landmarks, country = viewModel.country.value, weatherState = weatherViewModel.state, newsState = newsViewModel.state , loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) }, settingsViewModel=settingsViewModel, guideViewModel = viewModel)
+                NavigationDrawerScreen(
+                    cities = viewModel.citiesState.cities,
+                    landmarks = viewModel.landmarksState.landmarks,
+                    country = viewModel.country.value,
+                    weatherState = weatherViewModel.state,
+                    newsState = newsViewModel.state,
+                    loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) },
+                    settingsViewModel = settingsViewModel,
+                    guideViewModel = viewModel
+                )
 
             }
         }

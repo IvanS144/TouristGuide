@@ -1,6 +1,5 @@
 package com.mr.touristguide.core.data.paging
 
-import androidx.compose.ui.unit.max
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mr.touristguide.core.data.remote.ImagesApi
@@ -17,10 +16,9 @@ class SearchPagingSource(
         val currentPage = params.key ?: 1
         return try {
             val response = imagesApi.searchImages(term = query, perPage = perPage)
-            val endOfPaginationReached =if(maxImages >0) {
+            val endOfPaginationReached = if (maxImages > 0) {
                 (currentPage * perPage >= maxImages) || response.results.isEmpty()
-            }
-            else{
+            } else {
                 response.results.isEmpty();
             }
             if (response.results.isNotEmpty()) {

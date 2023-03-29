@@ -8,5 +8,5 @@ data class Country(
     val mapCenterLongitude: Double,
     val searchTerm: String,
     val properties: List<Property>
-    ) {
+) {
 }

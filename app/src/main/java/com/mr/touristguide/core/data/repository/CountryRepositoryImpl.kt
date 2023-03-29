@@ -10,10 +10,10 @@ import kotlinx.coroutines.withContext
 import java.nio.charset.Charset
 import javax.inject.Inject
 
-class CountryRepositoryImpl @Inject constructor(val app: Application) : CountryRepository{
+class CountryRepositoryImpl @Inject constructor(val app: Application) : CountryRepository {
     private val gson: Gson = Gson()
 
-    override suspend fun getCountry(): Country{
+    override suspend fun getCountry(): Country {
         val locale = app.applicationContext.getString(R.string.locale)
 //        var fileName = "state"
 //        if (locale != "en") {
@@ -21,11 +21,13 @@ class CountryRepositoryImpl @Inject constructor(val app: Application) : CountryR
 //        }
 //        val packageName = app.packageName
 //        val identifier = app.baseContext.resources.getIdentifier(fileName, "raw", packageName)
-        val inputStream = app.applicationContext.resources.openRawResource(if (locale == "en") {
-            R.raw.state
-        } else {
-            R.raw.state_sr
-        })
+        val inputStream = app.applicationContext.resources.openRawResource(
+            if (locale == "en") {
+                R.raw.state
+            } else {
+                R.raw.state_sr
+            }
+        )
         val json = inputStream.readBytes().toString(Charset.defaultCharset())
         withContext(Dispatchers.IO) {
             inputStream.close()
@@ -34,11 +36,13 @@ class CountryRepositoryImpl @Inject constructor(val app: Application) : CountryR
     }
 
     override suspend fun getCountry(locale: String): Country {
-        val inputStream = app.applicationContext.resources.openRawResource(if (locale == "en") {
-            R.raw.state
-        } else {
-            R.raw.state_sr
-        })
+        val inputStream = app.applicationContext.resources.openRawResource(
+            if (locale == "en") {
+                R.raw.state
+            } else {
+                R.raw.state_sr
+            }
+        )
         val json = inputStream.readBytes().toString(Charset.defaultCharset())
         withContext(Dispatchers.IO) {
             inputStream.close()

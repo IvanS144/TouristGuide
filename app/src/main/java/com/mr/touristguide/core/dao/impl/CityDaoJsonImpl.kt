@@ -12,13 +12,14 @@ class CityDaoJsonImpl(val context: Context) : CityDao {
     private val gson: Gson = Gson()
     private val cities: List<City>
 
-    init{
+    init {
         val inputStream = context.resources.openRawResource(R.raw.cities)
         val json = inputStream.readBytes().toString(Charset.defaultCharset())
         inputStream.close()
-        val typeToken = object: TypeToken<List<City>>(){}.type
+        val typeToken = object : TypeToken<List<City>>() {}.type
         cities = gson.fromJson(json, typeToken)
     }
+
     override fun getCities(): List<City> {
         return cities;
     }

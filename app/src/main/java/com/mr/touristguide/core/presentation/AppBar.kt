@@ -16,10 +16,17 @@ fun AppBar(
         title = {
             Text(text = title)
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary, titleContentColor = MaterialTheme.colorScheme.onPrimary, navigationIconContentColor = MaterialTheme.colorScheme.onPrimary),
+        colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+        ),
         navigationIcon = {
             IconButton(onClick = onNavigationIconClick) {
-                Icon(imageVector = Icons.Default.Menu, contentDescription = stringResource(id = R.string.toggle_navigation_drawer))
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = stringResource(id = R.string.toggle_navigation_drawer)
+                )
             }
         }
     )

@@ -32,7 +32,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule{
+object AppModule {
 
 //    @Provides
 //    @Singleton
@@ -46,7 +46,7 @@ object AppModule{
 
     @Provides
     @Singleton
-    fun provideCitiesApi(): CitiesApi{
+    fun provideCitiesApi(): CitiesApi {
 //        return retrofit.create(CitiesApi::class.java)
         return Retrofit.Builder()
             .baseUrl("https://63cacd0ff36cbbdfc76091ca.mockapi.io")
@@ -68,7 +68,7 @@ object AppModule{
 
     @Provides
     @Singleton
-    fun provideImagesApi(): ImagesApi{
+    fun provideImagesApi(): ImagesApi {
         val client = OkHttpClient.Builder()
             .readTimeout(15, TimeUnit.SECONDS)
             .connectTimeout(15, TimeUnit.SECONDS)
@@ -82,7 +82,7 @@ object AppModule{
 
     @Provides
     @Singleton
-    fun provideImageDatabase(app: Application): ImageDatabase{
+    fun provideImageDatabase(app: Application): ImageDatabase {
         return Room.databaseBuilder(
             app,
             ImageDatabase::class.java,
@@ -92,7 +92,7 @@ object AppModule{
 
     @Provides
     @Singleton
-    fun providePreferencesRepository(@ApplicationContext context: Context): PreferencesRepository{
+    fun providePreferencesRepository(@ApplicationContext context: Context): PreferencesRepository {
         return PreferencesRepositoryImpl(context)
     }
 
@@ -105,7 +105,7 @@ object AppModule{
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AppRepositoryModules{
+abstract class AppRepositoryModules {
     @Binds
     @Singleton
     abstract fun bindCityRepository(cityRepositoryImpl: CityRepositoryImpl): CityRepository

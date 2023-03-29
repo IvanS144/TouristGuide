@@ -2,11 +2,12 @@ package com.mr.touristguide.core.presentation.data
 
 import android.app.Application
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mr.touristguide.core.data.preferences.PreferencesRepository
 import com.mr.touristguide.core.domain.repository.CityRepository
 import com.mr.touristguide.core.domain.repository.CountryRepository
 import com.mr.touristguide.core.domain.repository.LandmarkRepository
@@ -17,8 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.mr.touristguide.R
-import com.mr.touristguide.core.data.preferences.PreferencesRepository
 
 @HiltViewModel
 class GuideViewModel @Inject constructor(
@@ -27,23 +26,23 @@ class GuideViewModel @Inject constructor(
     private val countryRepository: CountryRepository,
     private val app: Application,
     private val preferencesRepository: PreferencesRepository
-    ) : ViewModel(){
-//    private val api: CitiesApi = Retrofit.Builder()
+) : ViewModel() {
+    //    private val api: CitiesApi = Retrofit.Builder()
 //        .baseUrl("https://63cacd0ff36cbbdfc76091ca.mockapi.io")
 //        .addConverterFactory(MoshiConverterFactory.create())
 //        .build()
 //        .create()
 //    private val repository = CityRepositoryImpl(api)
     var citiesState by mutableStateOf(CitiesState())
-    private set
+        private set
     var landmarksState by mutableStateOf(LandmarksState())
-    private set
-    var country : MutableState<Country?> = mutableStateOf(null)
+        private set
+    var country: MutableState<Country?> = mutableStateOf(null)
 
-    var favoriteLandmarks : MutableState<List<Landmark>?> = mutableStateOf(null)
-    private set
+    var favoriteLandmarks: MutableState<List<Landmark>?> = mutableStateOf(null)
+        private set
 
-    init{
+    init {
         loadEverything()
     }
 
@@ -69,50 +68,50 @@ class GuideViewModel @Inject constructor(
         }
     }
 
-    fun loadCitiesOnly(){
+    fun loadCitiesOnly() {
         viewModelScope.launch {
             loadCities()
         }
     }
 
-    fun loadLandmarksOnly(){
+    fun loadLandmarksOnly() {
         viewModelScope.launch {
             loadLandmarks()
         }
     }
 
-    fun loadCountryOnly(){
+    fun loadCountryOnly() {
         viewModelScope.launch {
             loadCountry()
         }
     }
 
-    fun loadFavoriteLandmarks(){
+    fun loadFavoriteLandmarks() {
         viewModelScope.launch {
             favoriteLandmarks.value = landmarkRepository.getFavoriteLandmarks()
         }
     }
 
-    fun addToFavoriteLandmarks(id: Int){
+    fun addToFavoriteLandmarks(id: Int) {
         viewModelScope.launch {
             landmarkRepository.addToFavoriteLandmarks(id)
             favoriteLandmarks.value = landmarkRepository.getFavoriteLandmarks()
         }
     }
 
-    fun removeFromFavoriteLandmarks(id: Int){
+    fun removeFromFavoriteLandmarks(id: Int) {
         viewModelScope.launch {
             landmarkRepository.removeFromFavoriteLandmarks(id)
             favoriteLandmarks.value = landmarkRepository.getFavoriteLandmarks()
         }
     }
 
-    private suspend fun loadCities(){
+    private suspend fun loadCities() {
         citiesState = citiesState.copy(
             isLoading = true,
             isError = false
         )
-        citiesState = when(val result = cityRepository.getCities()){
+        citiesState = when (val result = cityRepository.getCities()) {
             is Resource.Success -> {
                 citiesState.copy(
                     cities = result.data,
@@ -120,7 +119,7 @@ class GuideViewModel @Inject constructor(
                     isError = false
                 )
             }
-            is Resource.Error ->{
+            is Resource.Error -> {
                 citiesState.copy(
                     cities = result.data,
                     isLoading = false,
@@ -130,12 +129,12 @@ class GuideViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadLandmarks(){
+    private suspend fun loadLandmarks() {
         landmarksState = landmarksState.copy(
             isLoading = true,
             isError = false
         )
-        landmarksState = when(val result = landmarkRepository.getLandmarks()){
+        landmarksState = when (val result = landmarkRepository.getLandmarks()) {
             is Resource.Success -> {
                 landmarksState.copy(
                     landmarks = result.data,
@@ -143,7 +142,7 @@ class GuideViewModel @Inject constructor(
                     isError = false
                 )
             }
-            is Resource.Error ->{
+            is Resource.Error -> {
                 landmarksState.copy(
                     landmarks = result.data,
                     isLoading = false,
@@ -153,16 +152,16 @@ class GuideViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadCountry(){
+    private suspend fun loadCountry() {
         country.value = countryRepository.getCountry()
     }
 
-    private suspend fun loadCities(locale: String){
+    private suspend fun loadCities(locale: String) {
         citiesState = citiesState.copy(
             isLoading = true,
             isError = false
         )
-        citiesState = when(val result = cityRepository.getCities(locale)){
+        citiesState = when (val result = cityRepository.getCities(locale)) {
             is Resource.Success -> {
                 citiesState.copy(
                     cities = result.data,
@@ -170,7 +169,7 @@ class GuideViewModel @Inject constructor(
                     isError = false
                 )
             }
-            is Resource.Error ->{
+            is Resource.Error -> {
                 citiesState.copy(
                     cities = result.data,
                     isLoading = false,
@@ -180,12 +179,12 @@ class GuideViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadLandmarks(locale: String){
+    private suspend fun loadLandmarks(locale: String) {
         landmarksState = landmarksState.copy(
             isLoading = true,
             isError = false
         )
-        landmarksState = when(val result = landmarkRepository.getLandmarks(locale)){
+        landmarksState = when (val result = landmarkRepository.getLandmarks(locale)) {
             is Resource.Success -> {
                 landmarksState.copy(
                     landmarks = result.data,
@@ -193,7 +192,7 @@ class GuideViewModel @Inject constructor(
                     isError = false
                 )
             }
-            is Resource.Error ->{
+            is Resource.Error -> {
                 landmarksState.copy(
                     landmarks = result.data,
                     isLoading = false,
@@ -203,7 +202,7 @@ class GuideViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadCountry(locale: String){
+    private suspend fun loadCountry(locale: String) {
         country.value = countryRepository.getCountry(locale)
     }
 }

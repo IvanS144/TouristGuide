@@ -1,8 +1,6 @@
 package com.mr.touristguide.core.data.mappers
 
-import com.mr.touristguide.core.data.remote.CityDto
 import com.mr.touristguide.core.data.remote.LandmarkDto
-import com.mr.touristguide.core.model.City
 import com.mr.touristguide.core.model.Landmark
 
 //fun mapToCities(cityDtos: List<CityDto>): List<City> {

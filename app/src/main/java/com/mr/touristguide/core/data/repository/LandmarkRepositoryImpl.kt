@@ -4,11 +4,9 @@ import android.app.Application
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mr.touristguide.R
-import com.mr.touristguide.core.data.mappers.mapToLandmarks
 import com.mr.touristguide.core.data.preferences.PreferencesRepository
 import com.mr.touristguide.core.data.remote.LandmarksApi
 import com.mr.touristguide.core.domain.repository.LandmarkRepository
-import com.mr.touristguide.core.model.City
 import com.mr.touristguide.core.model.Landmark
 import com.mr.touristguide.util.Resource
 import kotlinx.coroutines.Dispatchers

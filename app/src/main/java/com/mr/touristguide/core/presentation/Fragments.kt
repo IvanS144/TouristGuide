@@ -16,8 +16,9 @@ import com.mr.touristguide.Greeting
 fun Cities() {
     Column(
         modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Yellow).padding(top = 50.dp)
+            .fillMaxSize()
+            .background(Color.Yellow)
+            .padding(top = 50.dp)
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(

@@ -1,7 +1,7 @@
 package com.mr.touristguide.news.presentation
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,21 +15,21 @@ import javax.inject.Inject
 @HiltViewModel
 class NewsViewModel @Inject constructor(
     private val repository: NewsRepository
-) : ViewModel(){
+) : ViewModel() {
     var state by mutableStateOf(NewsState())
-    private set
+        private set
 
-    init{
+    init {
         loadNews()
     }
 
-    fun loadNews(){
+    fun loadNews() {
         viewModelScope.launch {
             state = state.copy(
                 isLoading = true,
                 isError = false
             )
-            state = when(val result =repository.getNews()){
+            state = when (val result = repository.getNews()) {
                 is Resource.Success -> {
                     state.copy(
                         news = result.data,
@@ -37,7 +37,7 @@ class NewsViewModel @Inject constructor(
                         isError = false
                     )
                 }
-                is Resource.Error ->{
+                is Resource.Error -> {
                     state.copy(
                         news = result.data,
                         isLoading = false,
@@ -48,7 +48,7 @@ class NewsViewModel @Inject constructor(
         }
     }
 
-    fun getArticle(id: Int): HeadlineDto?{
-        return state.news?.articles?.first{article -> article.id == id}
+    fun getArticle(id: Int): HeadlineDto? {
+        return state.news?.articles?.first { article -> article.id == id }
     }
 }

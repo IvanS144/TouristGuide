@@ -3,7 +3,6 @@ package com.mr.touristguide.core.model
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 data class City(
@@ -18,10 +17,10 @@ data class City(
     val sections: List<Section>,
     val flagUrl: String,
     val properties: List<Property>
-    ) {
-    fun getDescription(): AnnotatedString{
+) {
+    fun getDescription(): AnnotatedString {
         var string = buildAnnotatedString { append("") }
-        for(section in sections){
+        for (section in sections) {
             string = string.plus(
                 AnnotatedString(
                     text = section.title,
@@ -29,7 +28,7 @@ data class City(
                 )
             )
             string = buildAnnotatedString { append(string); append("\n") }
-            if(section.text!=null){
+            if (section.text != null) {
                 string = string.plus(
                     AnnotatedString(
                         text = section.text,
@@ -37,9 +36,9 @@ data class City(
                     )
                 )
             }
-            if(section.sections!=null && section.sections.isNotEmpty()){
+            if (section.sections != null && section.sections.isNotEmpty()) {
                 string = buildAnnotatedString { append(string); append("\n\n") }
-                for(subsection in section.sections){
+                for (subsection in section.sections) {
                     string = string.plus(
                         AnnotatedString(
                             text = subsection.title,
@@ -47,7 +46,7 @@ data class City(
                         )
                     )
                     string = buildAnnotatedString { append(string); append("\n") }
-                    if(section.text!=null){
+                    if (section.text != null) {
                         string = string.plus(
                             AnnotatedString(
                                 text = section.text,

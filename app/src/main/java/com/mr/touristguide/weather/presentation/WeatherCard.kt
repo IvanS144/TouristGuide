@@ -20,9 +20,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mr.touristguide.R
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
-import com.mr.touristguide.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

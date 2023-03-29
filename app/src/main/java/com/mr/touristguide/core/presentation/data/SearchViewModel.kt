@@ -12,7 +12,6 @@ import com.mr.touristguide.core.domain.repository.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +35,8 @@ class SearchViewModel @Inject constructor(
     fun search(query: String = searchQuery.value) {
         viewModelScope.launch(Dispatchers.IO) {
             val maxImages = preferencesRepository.getMaxImages()
-            imageRepository.searchImages(term = query, pageSize = 10, maxImages = maxImages).cachedIn(viewModelScope).collect {
+            imageRepository.searchImages(term = query, pageSize = 10, maxImages = maxImages)
+                .cachedIn(viewModelScope).collect {
                 _searchedImages.value = it
             }
         }
