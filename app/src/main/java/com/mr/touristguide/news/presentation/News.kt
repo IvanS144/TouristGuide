@@ -1,5 +1,7 @@
 package com.mr.touristguide.news.presentation
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -16,11 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImage
 import com.mr.touristguide.news.data.remote.HeadlineDto
@@ -34,7 +38,7 @@ fun NewsScreen(news: NewsDto, onHeadlineClick: (HeadlineDto) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(all = 4.dp),
+            .padding(horizontal = 4.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -54,46 +58,45 @@ fun HeadlinePreview(
     modifier: Modifier = Modifier,
     onClick: (HeadlineDto) -> Unit
 ) {
+    val context = LocalContext.current
     Surface(modifier = modifier
-        .shadow(elevation = 5.dp)
-        .clickable { onClick(headline) },
+        .clickable { val browserIntent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(headline.url)
+        )
+            ContextCompat.startActivity(context, browserIntent, null)},
+        shadowElevation = 5.dp,
         shape = RoundedCornerShape(8.dp),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Cyan)
+                .background(MaterialTheme.colorScheme.primaryContainer)
                 .padding(all = 4.dp), verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-//            Column(
-//                verticalArrangement = Arrangement.Center,
-//                modifier = Modifier.fillMaxWidth()
-//            ) {
-                Text(text = headline.title, style = titleTextStyle)
-                Text(text = headline.source.name, style = sourceTextStyle)
-//                if(headline.urlToImage!=null){
-//                    Surface(shape= RoundedCornerShape(8.dp)) {
-//                        AsyncImage(
-//                            model = headline.urlToImage,
-//                            contentDescription = null,
-//                            contentScale = ContentScale.Crop,
-//                            modifier = Modifier.weight(1f),
-//                            )
-//                    }
-//                }
-//            }
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(text = headline.title, style = titleTextStyle, color = MaterialTheme.colorScheme.onPrimaryContainer)
+            }
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(text = headline.source.name, style = sourceTextStyle, color = MaterialTheme.colorScheme.onPrimaryContainer)
+            }
             if (headline.urlToImage != null) {
-                Surface(shape = RoundedCornerShape(8.dp)) {
-                    AsyncImage(
-                        model = headline.urlToImage,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.weight(1f)
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Surface(shape = RoundedCornerShape(8.dp)) {
+                        AsyncImage(
+                            model = headline.urlToImage,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
 
-                    )
+
                 }
-
-
             }
         }
     }

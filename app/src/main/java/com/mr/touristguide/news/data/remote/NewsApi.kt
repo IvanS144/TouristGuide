@@ -3,6 +3,6 @@ package com.mr.touristguide.news.data.remote
 import retrofit2.http.GET
 
 interface NewsApi {
-    @GET("/v2/top-headlines?country=rs&category=sports")
+    @GET("/v2/top-headlines?country=us")
     suspend fun getNews(): NewsDto
 }
