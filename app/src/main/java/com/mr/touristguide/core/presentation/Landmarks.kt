@@ -1,5 +1,8 @@
 package com.mr.touristguide.core.presentation
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -9,9 +12,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,6 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.ExperimentalPagingApi
@@ -28,6 +32,9 @@ import androidx.paging.compose.items
 import com.mr.touristguide.R
 import com.mr.touristguide.core.model.Landmark
 import com.mr.touristguide.core.presentation.data.SearchViewModel
+import com.mr.touristguide.ui.theme.textLargeItalic
+import com.mr.touristguide.ui.theme.textNormal
+import com.mr.touristguide.ui.theme.titleLargeItalic
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,8 +50,7 @@ fun LandmarkList(
                 onClick = { onFloatingButtonClick() },
                 shape = CircleShape
             ) {
-
-
+                Icon(imageVector = Icons.Default.LocationOn, contentDescription = stringResource(id = R.string.map_of_landmarks_cd))
             }
         }) {
         LazyColumn(
@@ -70,7 +76,7 @@ fun LandmarkList(
                         }
                         Text(
                             text = item.name,
-                            style = TextStyle(fontSize = 16.sp),
+                            style = textNormal,
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -121,7 +127,10 @@ fun LandmarkDetails(
     onFavoriteButtonClicked: (Landmark) -> Unit
 ) {
     val images = searchViewModel.searchedImages.collectAsLazyPagingItems()
-    val nameStyle = TextStyle(fontSize = 40.sp, fontStyle = FontStyle.Italic)
+    var expanded by rememberSaveable {
+        mutableStateOf(false)
+    }
+//    val nameStyle = TextStyle(fontSize = 40.sp, fontStyle = FontStyle.Italic)
     val context = LocalContext.current
     val favoriteState = rememberSaveable { mutableStateOf(landmark.isFavorite) }
 //    val youtubePlayerView = YouTubePlayerView(context)
@@ -140,15 +149,9 @@ fun LandmarkDetails(
     ) {
         item {
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = landmark.name, style = nameStyle)
+                Text(text = landmark.name, style = titleLargeItalic)
             }
         }
-//        item {
-//            Divider(color = Color.Black, thickness = 1.dp)
-//        }
-//        item{
-//            Spacer(modifier = Modifier.height(5.dp))
-//        }
         item {
             Surface(
                 modifier = Modifier
@@ -162,9 +165,7 @@ fun LandmarkDetails(
                 ) {
                     Text(
                         text = landmark.shortDescription,
-                        fontStyle = FontStyle.Italic,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
+                        style = textLargeItalic,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
@@ -225,61 +226,6 @@ fun LandmarkDetails(
 //                })
 //            }
 //        }
-//        item{
-//            Spacer(modifier= Modifier.height(5.dp))
-//        }
-//        item{
-//            Surface(modifier = Modifier
-//                .fillMaxWidth()
-//                .shadow(elevation = 5.dp), shape = RoundedCornerShape(4.dp)
-//            ) {
-//                Column(modifier = Modifier
-//                    .fillMaxWidth()
-//                    .background(Color.Cyan)
-//                    .padding(all = 4.dp)) {
-//                    Row(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        horizontalArrangement = Arrangement.SpaceBetween
-//                    ) {
-//                        Text(text = "property1")
-//                        Text(text = "value1")
-//                    }
-//                    Row(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        horizontalArrangement = Arrangement.SpaceBetween
-//                    ) {
-//                        Text(text = "property1")
-//                        Text(text = "value1")
-//                    }
-//                    Row(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        horizontalArrangement = Arrangement.SpaceBetween
-//                    ) {
-//                        Text(text = "property1")
-//                        Text(text = "value1")
-//                    }
-//                    Row(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        horizontalArrangement = Arrangement.SpaceBetween
-//                    ) {
-//                        Text(text = "property1")
-//                        Text(text = "value1")
-//                    }
-//                    Row(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        horizontalArrangement = Arrangement.SpaceBetween
-//                    ) {
-//                        Text(text = "property1")
-//                        Text(text = "value1")
-//                    }
-//                }
-//            }
-//        }
 //        TODO main image
 //        TODO tabela statistike
         //placeholder text
@@ -288,16 +234,32 @@ fun LandmarkDetails(
                 modifier = Modifier
                     .fillMaxWidth(), shape = RoundedCornerShape(8.dp), shadowElevation = 5.dp
             ) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.primaryContainer)
                         .padding(all = 4.dp)
                 ) {
                     Text(
+                        modifier = Modifier
+                            .animateContentSize(
+                                animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioLowBouncy,
+                                    stiffness = Spring.StiffnessLow
+                                )
+                            )
+                            .clickable { expanded = !expanded },
                         text = landmark.getDescription(),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        maxLines = if(expanded) Int.MAX_VALUE else 10,
+                        overflow = TextOverflow.Ellipsis
                     )
+                    if(!expanded) {
+                        Button(onClick = { expanded = !expanded }) {
+                            Text(text = stringResource(id = R.string.show_more))
+
+                        }
+                    }
                 }
             }
         }
@@ -329,6 +291,9 @@ fun LandmarkDetails(
 //            Spacer(modifier = Modifier.height(12.dp))
                 UnsplashItem(unsplashImage = it)
             }
+        }
+        item{
+            Spacer(modifier = Modifier.height(12.dp))
         }
 
     }

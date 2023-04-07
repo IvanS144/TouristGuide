@@ -36,10 +36,10 @@ class CityRepositoryImpl @Inject constructor(
 //        val packageName = app.packageName
 //        val identifier = app.baseContext.resources.getIdentifier(fileName, "raw", packageName)
         val inputStream = app.applicationContext.resources.openRawResource(
-            if (locale == "en") {
-                R.raw.cities
-            } else {
+            if (locale == "sr") {
                 R.raw.cities_sr
+            } else {
+                R.raw.cities
             }
         )
         val json = inputStream.readBytes().toString(Charset.defaultCharset())
@@ -54,10 +54,10 @@ class CityRepositoryImpl @Inject constructor(
 
     override suspend fun getCities(locale: String): Resource<List<City>> {
         val inputStream = app.applicationContext.resources.openRawResource(
-            if (locale == "en") {
-                R.raw.cities
-            } else {
+            if (locale == "sr") {
                 R.raw.cities_sr
+            } else {
+                R.raw.cities
             }
         )
         val json = inputStream.readBytes().toString(Charset.defaultCharset())

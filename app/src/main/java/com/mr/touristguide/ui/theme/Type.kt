@@ -1,11 +1,43 @@
 package com.mr.touristguide.ui.theme
 
+import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
+val h1 = TextStyle(
+    fontSize = 22.sp,
+)
+val italicTitle = TextStyle(
+    fontSize = 22.sp,
+    fontStyle = FontStyle.Italic
+)
+val h2 = TextStyle(
+    fontSize = 20.sp
+)
+val h3 = TextStyle(
+    fontSize = 18.sp
+)
+val textNormal = TextStyle(
+    fontSize = 16.sp
+)
+val textSmall = TextStyle(
+    fontSize = 14.sp
+)
+val textLarge = TextStyle(
+    fontSize = 18.sp
+)
+val textLargeItalic = TextStyle(
+    fontSize = 18.sp,
+    fontStyle = FontStyle.Italic
+)
+val titleLargeItalic = TextStyle(
+    fontSize = 40.sp,
+    fontStyle = FontStyle.Italic
+)
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(

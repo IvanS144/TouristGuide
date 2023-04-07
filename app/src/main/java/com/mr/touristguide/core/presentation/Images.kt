@@ -89,11 +89,11 @@ fun UnsplashItem(unsplashImage: UnsplashImage) {
             ) {
                 Text(
                     text = buildAnnotatedString {
-                        append("Photo by ")
+                        append("${stringResource(id = R.string.photo_by)} ")
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Black)) {
                             append(unsplashImage.user.username)
                         }
-                        append(" on Unsplash")
+                        append(" ${stringResource(id = R.string.on_unsplash)}")
                     },
                     color = Color.White,
                     fontSize = MaterialTheme.typography.bodySmall.fontSize,

@@ -30,7 +30,7 @@ fun CitiesMap(
                 modifier = Modifier.weight(1f),
                 uiSettings = MapUiSettings(compassEnabled = true)
             ) {
-                CityMarkers(cities, onMarkerClick)
+                CityMarkers(cities, onMarkerClick, latitude, longitude)
             }
         }
     }
@@ -38,12 +38,12 @@ fun CitiesMap(
 }
 
 @Composable
-fun CityMarkers(cities: List<City>, onMarkerClick: (Int) -> Unit) {
+fun CityMarkers(cities: List<City>, onMarkerClick: (Int) -> Unit, latitude: Double, longitude: Double) {
     for (city in cities) {
         Marker(
             state = rememberMarkerState(position = LatLng(city.latitude, city.longitude)),
             title = city.name,
-            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
+            icon = BitmapDescriptorFactory.defaultMarker(if(city.latitude==latitude && city.longitude==longitude)BitmapDescriptorFactory.HUE_GREEN else BitmapDescriptorFactory.HUE_RED),
             onClick = { onMarkerClick(city.id); false }
         )
     }
@@ -70,7 +70,7 @@ fun LandmarksMap(
                 uiSettings = MapUiSettings(compassEnabled = true),
 
                 ) {
-                LandmarkMarkers(landmarks, onMarkerClick)
+                LandmarkMarkers(landmarks, onMarkerClick, latitude, longitude)
             }
         }
     }
@@ -78,12 +78,12 @@ fun LandmarksMap(
 }
 
 @Composable
-fun LandmarkMarkers(landmarks: List<Landmark>, onMarkerClick: (Int) -> Unit) {
+fun LandmarkMarkers(landmarks: List<Landmark>, onMarkerClick: (Int) -> Unit, latitude: Double, longitude: Double) {
     for (landmark in landmarks) {
         Marker(
             state = rememberMarkerState(position = LatLng(landmark.latitude, landmark.longitude)),
             title = landmark.name,
-            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED),
+            icon = BitmapDescriptorFactory.defaultMarker(if(landmark.latitude==latitude && landmark.longitude==longitude)BitmapDescriptorFactory.HUE_GREEN else BitmapDescriptorFactory.HUE_RED),
             onClick = { onMarkerClick(landmark.id); false }
         )
     }

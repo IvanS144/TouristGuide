@@ -22,10 +22,10 @@ class CountryRepositoryImpl @Inject constructor(val app: Application) : CountryR
 //        val packageName = app.packageName
 //        val identifier = app.baseContext.resources.getIdentifier(fileName, "raw", packageName)
         val inputStream = app.applicationContext.resources.openRawResource(
-            if (locale == "en") {
-                R.raw.state
-            } else {
+            if (locale == "sr") {
                 R.raw.state_sr
+            } else {
+                R.raw.state
             }
         )
         val json = inputStream.readBytes().toString(Charset.defaultCharset())
@@ -37,10 +37,10 @@ class CountryRepositoryImpl @Inject constructor(val app: Application) : CountryR
 
     override suspend fun getCountry(locale: String): Country {
         val inputStream = app.applicationContext.resources.openRawResource(
-            if (locale == "en") {
-                R.raw.state
-            } else {
+            if (locale == "sr") {
                 R.raw.state_sr
+            } else {
+                R.raw.state
             }
         )
         val json = inputStream.readBytes().toString(Charset.defaultCharset())

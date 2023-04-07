@@ -43,10 +43,10 @@ class LandmarkRepositoryImpl @Inject constructor(
 //        val packageName = app.packageName
 //        val identifier = app.baseContext.resources.getIdentifier(fileName, "raw", packageName)
         val inputStream = app.applicationContext.resources.openRawResource(
-            if (locale == "en") {
-                R.raw.landmarks
-            } else {
+            if (locale == "sr") {
                 R.raw.landmarks_sr
+            } else {
+                R.raw.landmarks
             }
         )
         val json = inputStream.readBytes().toString(Charset.defaultCharset())
@@ -70,10 +70,10 @@ class LandmarkRepositoryImpl @Inject constructor(
     override suspend fun getLandmarks(locale: String): Resource<List<Landmark>> {
         val favorites = preferencesRepository.getFavoriteLandmarks()
         val inputStream = app.applicationContext.resources.openRawResource(
-            if (locale == "en") {
-                R.raw.landmarks
-            } else {
+            if (locale == "sr") {
                 R.raw.landmarks_sr
+            } else {
+                R.raw.landmarks
             }
         )
         val json = inputStream.readBytes().toString(Charset.defaultCharset())

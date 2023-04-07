@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--    parent="android:Theme.Material.Light.NoActionBar"-->
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Theme.TouristGuide" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/red</item>
+        <item name="android:statusBarColor">@color/secondaryNight</item>
     </style>
     <style name="ActivityTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="android:statusBarColor">@color/red</item>
+        <item name="android:statusBarColor">@color/secondaryNight</item>
     </style>
 </resources>

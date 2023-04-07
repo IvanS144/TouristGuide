@@ -34,4 +34,5 @@
     <string name="locale">en</string>
     <string name="dropdown_arrow">Dropdown arrow</string>
     <string name="language">Language</string>
+    <string name="show_more">Show more</string>
 </resources>

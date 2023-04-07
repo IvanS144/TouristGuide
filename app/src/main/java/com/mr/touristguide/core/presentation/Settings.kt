@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.mr.touristguide.R
 import com.mr.touristguide.core.presentation.data.GuideViewModel
 import com.mr.touristguide.core.presentation.data.SettingsViewModel
+import com.mr.touristguide.ui.theme.textLarge
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,7 +86,7 @@ fun LanguageSpinner(settingsViewModel: SettingsViewModel, guideViewModel: GuideV
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = settingsViewModel.languageText, fontSize = 18.sp)
+            Text(text = settingsViewModel.languageText, style = textLarge)
             Icon(
                 imageVector = Icons.Filled.ArrowDropDown,
                 contentDescription = stringResource(id = R.string.dropdown_arrow)

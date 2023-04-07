@@ -38,16 +38,22 @@ fun NewsScreen(news: NewsDto, onHeadlineClick: (HeadlineDto) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 4.dp, vertical = 12.dp),
+            .padding(horizontal = 4.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        item{
+            Spacer(modifier = Modifier.height(12.dp))
+        }
         items(items = news.articles) { headline ->
             HeadlinePreview(
                 headline = headline,
                 modifier = Modifier.fillMaxWidth(),
                 onHeadlineClick
             )
+        }
+        item{
+            Spacer(modifier = Modifier.height(12.dp))
         }
     }
 }

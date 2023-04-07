@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val viewModel: GuideViewModel by viewModels()
-    private val weatherViewModel: WeatherViewModel by viewModels()
+//    private val weatherViewModel: WeatherViewModel by viewModels()
     private val newsViewModel: NewsViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
@@ -38,9 +38,9 @@ class MainActivity : AppCompatActivity() {
                     cities = viewModel.citiesState.cities,
                     landmarks = viewModel.landmarksState.landmarks,
                     country = viewModel.country.value,
-                    weatherState = weatherViewModel.state,
+//                    weatherState = weatherViewModel.state,
                     newsState = newsViewModel.state,
-                    loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) },
+//                    loadWeather = { city -> weatherViewModel.loadWeatherInfo(city) },
                     settingsViewModel = settingsViewModel,
                     guideViewModel = viewModel
                 )

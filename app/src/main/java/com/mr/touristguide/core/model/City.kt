@@ -46,10 +46,10 @@ data class City(
                         )
                     )
                     string = buildAnnotatedString { append(string); append("\n") }
-                    if (section.text != null) {
+                    if (subsection.text != null) {
                         string = string.plus(
                             AnnotatedString(
-                                text = section.text,
+                                text = subsection.text,
                                 spanStyle = SpanStyle(fontSize = 18.sp)
                             )
                         )

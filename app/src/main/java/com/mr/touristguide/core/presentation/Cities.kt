@@ -1,26 +1,30 @@
 package com.mr.touristguide.core.presentation
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -31,9 +35,13 @@ import coil.request.ImageRequest
 import com.mr.touristguide.R
 import com.mr.touristguide.core.model.City
 import com.mr.touristguide.core.presentation.data.SearchViewModel
+import com.mr.touristguide.ui.theme.textLargeItalic
+import com.mr.touristguide.ui.theme.textNormal
+import com.mr.touristguide.ui.theme.textSmall
+import com.mr.touristguide.ui.theme.titleLargeItalic
 import com.mr.touristguide.weather.presentation.WeatherCard
 import com.mr.touristguide.weather.presentation.WeatherForecast
-import com.mr.touristguide.weather.presentation.WeatherState
+import com.mr.touristguide.weather.presentation.WeatherViewModel
 import com.mr.touristguide.weather.presentation.colors.DarkBlue
 import com.mr.touristguide.weather.presentation.colors.DeepBlue
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -56,6 +64,7 @@ fun CityList(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = MaterialTheme.colorScheme.onSecondary
             ) {
+                Icon(imageVector = Icons.Default.LocationOn, contentDescription = stringResource(id = R.string.map_of_cities_cd))
             }
         }) {
         LazyColumn(
@@ -91,12 +100,13 @@ fun CityList(
                             contentDescription = "Flag of" + item.name,
                             modifier = Modifier
                                 .size(40.dp)
-                                .clip(CircleShape)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
                         )
                         Spacer(modifier = Modifier.width(18.dp))
                         Text(
                             text = item.name,
-                            style = TextStyle(fontSize = 16.sp),
+                            style = textNormal,
                             modifier = Modifier.weight(1f)
                         )
 //                        Button(onClick = { /*TODO*/ }) {
@@ -120,7 +130,8 @@ fun CityDetails(
     searchViewModel: SearchViewModel
 ) {
     val images = searchViewModel.searchedImages.collectAsLazyPagingItems()
-    val nameStyle = TextStyle(fontSize = 40.sp, fontStyle = FontStyle.Italic)
+    var expanded by rememberSaveable { mutableStateOf(false)}
+//    val nameStyle = TextStyle(fontSize = 40.sp, fontStyle = FontStyle.Italic)
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -128,7 +139,7 @@ fun CityDetails(
     ) {
         item {
             Row(modifier = Modifier.fillMaxWidth()) {
-                Text(text = city.name, style = nameStyle)
+                Text(text = city.name, style = titleLargeItalic)
             }
         }
         item {
@@ -144,10 +155,8 @@ fun CityDetails(
                 ) {
                     Text(
                         text = city.shortDescription,
-                        fontStyle = FontStyle.Italic,
-                        fontWeight = FontWeight.Bold,
+                        style = textLargeItalic,
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontSize = 18.sp
                     )
                 }
             }
@@ -204,12 +213,12 @@ fun CityDetails(
                             Text(
                                 text = property.key,
                                 color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                fontSize = 14.sp
+                                style = textSmall
                             )
                             Text(
                                 text = property.value,
                                 color = MaterialTheme.colorScheme.onTertiaryContainer,
-                                fontSize = 14.sp
+                                style = textSmall
                             )
                         }
                     }
@@ -221,16 +230,36 @@ fun CityDetails(
                 modifier = Modifier
                     .fillMaxWidth(), shape = RoundedCornerShape(8.dp), shadowElevation = 5.dp
             ) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.primaryContainer)
                         .padding(all = 4.dp)
                 ) {
                     Text(
+                        modifier = Modifier.animateContentSize(
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioLowBouncy,
+                                stiffness = Spring.StiffnessLow
+                            )
+                        )
+                            .clickable { expanded = !expanded },
                         text = city.getDescription(),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        maxLines = if(expanded) Int.MAX_VALUE else 10,
+                        overflow = TextOverflow.Ellipsis,
+//                        onTextLayout = {
+//                            if(it.hasVisualOverflow){
+//                                expanded = true;
+//                            }
+//                        }
                     )
+                    if(!expanded) {
+                        Button(onClick = { expanded = !expanded }) {
+                            Text(text = stringResource(id = R.string.show_more))
+
+                        }
+                    }
                 }
             }
         }
@@ -239,6 +268,9 @@ fun CityDetails(
                 UnsplashItem(unsplashImage = it)
             }
         }
+        item{
+            Spacer(modifier = Modifier.height(12.dp))
+        }
 
     }
 
@@ -246,7 +278,7 @@ fun CityDetails(
 }
 
 @Composable
-fun CityWeather(city: City, weatherState: WeatherState) {
+fun CityWeather(city: City, weatherViewModel: WeatherViewModel) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -256,18 +288,18 @@ fun CityWeather(city: City, weatherState: WeatherState) {
                 .background(DarkBlue)
         ) {
             WeatherCard(
-                state = weatherState,
+                state = weatherViewModel.state,
                 backgroundColor = DeepBlue
             )
             Spacer(modifier = Modifier.height(16.dp))
-            WeatherForecast(state = weatherState)
+            WeatherForecast(state = weatherViewModel.state)
         }
 //        if(weatherState.isLoading) {
 //            CircularProgressIndicator(
 //                modifier = Modifier.align(Alignment.Center)
 //            )
 //        }
-        weatherState.error?.let { error ->
+        weatherViewModel.state.error?.let { error ->
             Text(
                 text = error,
                 color = Color.Red,

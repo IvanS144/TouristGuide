@@ -36,6 +36,7 @@ import com.mr.touristguide.news.presentation.Article
 import com.mr.touristguide.news.presentation.NewsScreen
 import com.mr.touristguide.news.presentation.NewsState
 import com.mr.touristguide.weather.presentation.WeatherState
+import com.mr.touristguide.weather.presentation.WeatherViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagingApi::class)
@@ -45,10 +46,10 @@ fun NavigationDrawerScreen(
     cities: List<City>?,
     landmarks: List<Landmark>?,
     country: Country?,
-    weatherState: WeatherState,
+//    weatherState: WeatherState,
     newsState: NewsState,
-    loadWeather: (City) -> Unit,
-    imagesViewModel: ImagesViewModel = hiltViewModel(),
+//    loadWeather: (City) -> Unit,
+//    imagesViewModel: ImagesViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel,
     guideViewModel: GuideViewModel
 ) {
@@ -80,7 +81,7 @@ fun NavigationDrawerScreen(
         stringResource(id = R.string.app_name)
     }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val getAllImages = imagesViewModel.getAllImages.collectAsLazyPagingItems()
+//    val getAllImages = imagesViewModel.getAllImages.collectAsLazyPagingItems()
 //    viewModel.loadCities()
 //    val landmarks = viewModel.state
     val items = listOf<MenuItem>(
@@ -135,7 +136,7 @@ fun NavigationDrawerScreen(
     )
     ModalNavigationDrawer(
         drawerContent = {
-            DrawerHeader()
+//            DrawerHeader()
             DrawerBody(
                 items = items,
                 onItemClick = { item -> navController.navigate(route = item.id) })
@@ -283,8 +284,10 @@ fun NavigationDrawerScreen(
                     val id = entry.arguments?.getInt("id")
                     if (id != null) {
                         val selectedCity = cities?.first { city -> city.id == id }?.let {
-                            loadWeather(it)
-                            CityWeather(city = it, weatherState)
+                            //loadWeather(it)
+                            val weatherViewModel = hiltViewModel<WeatherViewModel>()
+                            weatherViewModel.loadWeatherInfo(it)
+                            CityWeather(city = it, weatherViewModel = weatherViewModel)
                         }
                     }
                 }
@@ -308,7 +311,7 @@ fun NavigationDrawerScreen(
                     CitiesMap(
                         modifier = Modifier.fillMaxSize(),
                         cities,
-                        onMarkerClick = { id: Int -> navController.navigate("landmarks/${id}") },
+                        onMarkerClick = { id: Int -> navController.navigate("cities/${id}") },
                         latitude = latitude,
                         longitude = longitude,
                         zoom = zoom,

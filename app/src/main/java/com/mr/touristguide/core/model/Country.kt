@@ -7,6 +7,8 @@ data class Country(
     val mapCenterLatitude: Double,
     val mapCenterLongitude: Double,
     val searchTerm: String,
-    val properties: List<Property>
+    val properties: List<Property>,
+    val flagUrl: String,
+    val coatOfArmsUrl: String
 ) {
 }
