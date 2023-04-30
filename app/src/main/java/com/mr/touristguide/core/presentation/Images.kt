@@ -100,11 +100,11 @@ fun UnsplashItem(unsplashImage: UnsplashImage) {
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                LikeCounter(
-                    modifier = Modifier.weight(3f),
-                    painter = painterResource(id = R.drawable.ic_heart),
-                    likes = "${unsplashImage.likes}"
-                )
+//                LikeCounter(
+//                    modifier = Modifier.weight(3f),
+//                    painter = painterResource(id = R.drawable.ic_heart),
+//                    likes = "${unsplashImage.likes}"
+//                )
             }
         }
     }

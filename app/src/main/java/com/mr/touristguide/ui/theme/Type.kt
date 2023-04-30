@@ -1,24 +1,24 @@
 package com.mr.touristguide.ui.theme
 
-import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-val h1 = TextStyle(
+val h1 = SpanStyle(
     fontSize = 22.sp,
 )
 val italicTitle = TextStyle(
     fontSize = 22.sp,
     fontStyle = FontStyle.Italic
 )
-val h2 = TextStyle(
+val h2 = SpanStyle(
     fontSize = 20.sp
 )
-val h3 = TextStyle(
+val textSpanNormal = SpanStyle(
     fontSize = 18.sp
 )
 val textNormal = TextStyle(

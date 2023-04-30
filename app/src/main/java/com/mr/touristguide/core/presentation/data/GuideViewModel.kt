@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.mr.touristguide.core.data.preferences.PreferencesRepository
 import com.mr.touristguide.core.domain.repository.CityRepository
 import com.mr.touristguide.core.domain.repository.CountryRepository
+import com.mr.touristguide.core.domain.repository.ImageRepository
 import com.mr.touristguide.core.domain.repository.LandmarkRepository
 import com.mr.touristguide.core.model.Country
 import com.mr.touristguide.core.model.Landmark
@@ -25,7 +26,8 @@ class GuideViewModel @Inject constructor(
     private val landmarkRepository: LandmarkRepository,
     private val countryRepository: CountryRepository,
     private val app: Application,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val imageRepository: ImageRepository
 ) : ViewModel() {
     //    private val api: CitiesApi = Retrofit.Builder()
 //        .baseUrl("https://63cacd0ff36cbbdfc76091ca.mockapi.io")
@@ -200,6 +202,7 @@ class GuideViewModel @Inject constructor(
                 )
             }
         }
+        landmarksState.landmarks?.forEach { landmark -> landmark.image = imageRepository.getImage(landmark.photoId) }
     }
 
     private suspend fun loadCountry(locale: String) {

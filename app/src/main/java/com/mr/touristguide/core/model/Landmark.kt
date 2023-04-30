@@ -1,9 +1,11 @@
 package com.mr.touristguide.core.model
 
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.unit.sp
+import com.mr.touristguide.core.data.remote.UnsplashImage
+import com.mr.touristguide.ui.theme.h1
+import com.mr.touristguide.ui.theme.h2
+import com.mr.touristguide.ui.theme.textSpanNormal
 
 data class Landmark(
     val id: Int,
@@ -13,57 +15,60 @@ data class Landmark(
     val latitude: Double,
     val longitude: Double,
     var isFavorite: Boolean = false,
-    val sections: List<Section>
+    val sections: List<Section>,
+    val searchTerm: String?,
+    var image: UnsplashImage?,
+    val photoId: String
 ) {
-    fun getDescription(): AnnotatedString {
-        var string = buildAnnotatedString { append("") }
-        for (section in sections) {
-            string = string.plus(
-                AnnotatedString(
-                    text = section.title,
-                    spanStyle = SpanStyle(fontSize = 22.sp)
-                )
-            )
-            string = buildAnnotatedString { append(string); append("\n") }
-            if (section.text != null) {
-                string = string.plus(
-                    AnnotatedString(
-                        text = section.text,
-                        spanStyle = SpanStyle(fontSize = 18.sp)
-                    )
-                )
-            }
-            if (section.sections != null && section.sections.isNotEmpty()) {
-                string = buildAnnotatedString { append(string); append("\n\n") }
-                for (subsection in section.sections) {
-                    string = string.plus(
-                        AnnotatedString(
-                            text = subsection.title,
-                            spanStyle = SpanStyle(fontSize = 20.sp)
-                        )
-                    )
-                    string = buildAnnotatedString { append(string); append("\n") }
-                    if (subsection.text != null) {
-                        string = string.plus(
-                            AnnotatedString(
-                                text = subsection.text,
-                                spanStyle = SpanStyle(fontSize = 18.sp)
-                            )
-                        )
-                    }
-                    string = string.plus(
-                        AnnotatedString(
-                            text = "\n\n"
-                        )
-                    )
-                }
-            }
-            string = string.plus(
-                AnnotatedString(
-                    text = "\n\n"
-                )
-            )
-        }
-        return string
-    }
+//    fun getDescription(): AnnotatedString {
+//        var string = buildAnnotatedString { append("") }
+//        for (section in sections) {
+//            string = string.plus(
+//                AnnotatedString(
+//                    text = section.title,
+//                    spanStyle = h1
+//                )
+//            )
+//            if (section.text != null) {
+//                string = buildAnnotatedString { append(string); append("\n") }
+//                string = string.plus(
+//                    AnnotatedString(
+//                        text = section.text,
+//                        spanStyle = textSpanNormal
+//                    )
+//                )
+//            }
+//            if (section.sections != null && section.sections.isNotEmpty()) {
+//                string = buildAnnotatedString { append(string); append("\n\n") }
+//                for (subsection in section.sections) {
+//                    string = string.plus(
+//                        AnnotatedString(
+//                            text = subsection.title,
+//                            spanStyle = h2
+//                        )
+//                    )
+//                    if (subsection.text != null) {
+//                        string = buildAnnotatedString { append(string); append("\n") }
+//                        string = string.plus(
+//                            AnnotatedString(
+//                                text = subsection.text,
+//                                spanStyle = textSpanNormal
+//                            )
+//                        )
+//                    }
+//                    string = string.plus(
+//                        AnnotatedString(
+//                            text = "\n\n"
+//                        )
+//                    )
+//                }
+//            }
+//            string = string.plus(
+//                AnnotatedString(
+//                    text = "\n\n"
+//                )
+//            )
+//        }
+//        return string
+//    }
 }

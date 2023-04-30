@@ -11,4 +11,5 @@ interface ImageRepository {
         pageSize: Int,
         maxImages: Int
     ): Flow<PagingData<UnsplashImage>>
+    suspend fun getImage(id: String): UnsplashImage
 }

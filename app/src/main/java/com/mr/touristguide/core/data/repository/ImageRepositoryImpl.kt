@@ -47,4 +47,8 @@ class ImageRepositoryImpl @Inject constructor(
             }
         ).flow
     }
+
+    override suspend fun getImage(id: String): UnsplashImage{
+        return imagesApi.getImage(id);
+    }
 }

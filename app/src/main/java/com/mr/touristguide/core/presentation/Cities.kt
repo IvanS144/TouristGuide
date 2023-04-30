@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,12 +35,11 @@ import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import com.mr.touristguide.R
+import com.mr.touristguide.core.data.mappers.sectionsToAnnotatedString
 import com.mr.touristguide.core.model.City
+import com.mr.touristguide.core.model.Section
 import com.mr.touristguide.core.presentation.data.SearchViewModel
-import com.mr.touristguide.ui.theme.textLargeItalic
-import com.mr.touristguide.ui.theme.textNormal
-import com.mr.touristguide.ui.theme.textSmall
-import com.mr.touristguide.ui.theme.titleLargeItalic
+import com.mr.touristguide.ui.theme.*
 import com.mr.touristguide.weather.presentation.WeatherCard
 import com.mr.touristguide.weather.presentation.WeatherForecast
 import com.mr.touristguide.weather.presentation.WeatherViewModel
@@ -244,7 +245,7 @@ fun CityDetails(
                             )
                         )
                             .clickable { expanded = !expanded },
-                        text = city.getDescription(),
+                        text = sectionsToAnnotatedString(city.sections),
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         maxLines = if(expanded) Int.MAX_VALUE else 10,
                         overflow = TextOverflow.Ellipsis,

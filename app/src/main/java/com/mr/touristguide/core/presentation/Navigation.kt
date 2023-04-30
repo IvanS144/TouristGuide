@@ -71,9 +71,9 @@ fun NavigationDrawerScreen(
         stringResource(id = R.string.favorite_landmarks)
     } else if (route == "settings") {
         stringResource(id = R.string.settings)
-    } else if (route == "map_of_cities") {
+    } else if (route.startsWith("map_of_cities")) {
         stringResource(id = R.string.map_of_cities)
-    } else if (route == "map_of_landmarks") {
+    } else if (route.startsWith("map_of_landmarks")) {
         stringResource(id = R.string.map_of_landmarks)
     } else if (route.startsWith("weather")) {
         stringResource(id = R.string.weather)
@@ -254,7 +254,7 @@ fun NavigationDrawerScreen(
                         val selectedLandmark = landmarks?.first { landmark -> landmark.id == id }
                         if (selectedLandmark != null) {
                             val searchViewModel = hiltViewModel<SearchViewModel>()
-                            searchViewModel.updateSearchQuery(selectedLandmark.name)
+                            searchViewModel.updateSearchQuery(selectedLandmark.searchTerm ?: selectedLandmark.name)
                             searchViewModel.search()
                             LandmarkDetails(
                                 landmark = selectedLandmark,
@@ -295,18 +295,18 @@ fun NavigationDrawerScreen(
                     route = "map_of_cities?latitude={latitude}&longitude={longitude}&zoom={zoom}",
                     arguments = listOf(
                         navArgument("latitude") {
-                            type = NavType.FloatType; defaultValue = 44.01292f; nullable = false
+                            type = NavType.StringType; defaultValue = "44.01292"; nullable = false
                         },
                         navArgument("longitude") {
-                            type = NavType.FloatType; defaultValue = 20.90975f; nullable = false
+                            type = NavType.StringType; defaultValue = "20.90975"; nullable = false
                         },
                         navArgument("zoom") {
                             type = NavType.FloatType; defaultValue = 7f; nullable = false
                         }
                     )
                 ) { entry ->
-                    val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.01292
-                    val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 20.90975
+                    val latitude = entry.arguments?.getString("latitude")?.toDouble() ?: 44.01292
+                    val longitude = entry.arguments?.getString("longitude")?.toDouble() ?: 20.90975
                     val zoom = entry.arguments?.getFloat("zoom") ?: 7f
                     CitiesMap(
                         modifier = Modifier.fillMaxSize(),
@@ -320,17 +320,17 @@ fun NavigationDrawerScreen(
                 composable(route = "map_of_landmarks?latitude={latitude}&longitude={longitude}&zoom={zoom}",
                     arguments = listOf(
                         navArgument("latitude") {
-                            type = NavType.FloatType; defaultValue = 44.01292f; nullable = false
+                            type = NavType.StringType; defaultValue = "44.01292"; nullable = false
                         },
                         navArgument("longitude") {
-                            type = NavType.FloatType; defaultValue = 20.90975f; nullable = false
+                            type = NavType.StringType; defaultValue = "20.90975"; nullable = false
                         },
                         navArgument("zoom") {
                             type = NavType.FloatType; defaultValue = 7f; nullable = false
                         }
                     )) { entry ->
-                    val latitude = entry.arguments?.getFloat("latitude")?.toDouble() ?: 44.01292
-                    val longitude = entry.arguments?.getFloat("longitude")?.toDouble() ?: 20.90975
+                    val latitude = entry.arguments?.getString("latitude")?.toDouble() ?: 44.01292
+                    val longitude = entry.arguments?.getString("longitude")?.toDouble() ?: 20.90975
                     val zoom = entry.arguments?.getFloat("zoom") ?: 7f
                     LandmarksMap(
                         landmarks = landmarks,
@@ -382,9 +382,9 @@ private fun getTitleByRoute(route: String) = if (route == "home") {
     "Favorites"
 } else if (route == "settings") {
     "Settings"
-} else if (route == "map_of_cities") {
+} else if (route.startsWith("map_of_cities")) {
     "Map of cities"
-} else if (route == "map_of_landmarks") {
+} else if (route.startsWith("map_of_landmarks")) {
     "Map of landmarks"
 } else if (route.startsWith("weather")) {
     "Weather"

@@ -30,6 +30,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.mr.touristguide.R
+import com.mr.touristguide.core.data.mappers.sectionsToAnnotatedString
 import com.mr.touristguide.core.model.Landmark
 import com.mr.touristguide.core.presentation.data.SearchViewModel
 import com.mr.touristguide.ui.theme.textLargeItalic
@@ -48,7 +49,9 @@ fun LandmarkList(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onFloatingButtonClick() },
-                shape = CircleShape
+                shape = CircleShape,
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary
             ) {
                 Icon(imageVector = Icons.Default.LocationOn, contentDescription = stringResource(id = R.string.map_of_landmarks_cd))
             }
@@ -63,22 +66,31 @@ fun LandmarkList(
                     modifier = Modifier.padding(all = 4.dp),
                     shape = MaterialTheme.shapes.small
                 ) {
-                    Row(modifier = Modifier
+                    Column(modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
-                        .clickable { onItemClick(item) }) {
-                        if (item.isFavorite) {
-                            Icon(
-                                imageVector = Icons.Default.Favorite,
-                                contentDescription = stringResource(id = R.string.favorite_landmark_icon_description)
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                        }
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .clickable { onItemClick(item) },
+                    verticalArrangement = Arrangement.spacedBy(6.dp))
+                    {
+                        item.image?.let { it1 -> UnsplashItem(unsplashImage = it1) }
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 6.dp),
+                        horizontalArrangement = Arrangement.Center){
+                            if (item.isFavorite) {
+                                Icon(
+                                    imageVector = Icons.Default.Favorite,
+                                    contentDescription = stringResource(id = R.string.favorite_landmark_icon_description)
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                            }
+
                         Text(
                             text = item.name,
                             style = textNormal,
-                            modifier = Modifier.weight(1f)
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
                         )
+                    }
                     }
                 }
             }
@@ -249,7 +261,7 @@ fun LandmarkDetails(
                                 )
                             )
                             .clickable { expanded = !expanded },
-                        text = landmark.getDescription(),
+                        text = sectionsToAnnotatedString(landmark.sections),
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         maxLines = if(expanded) Int.MAX_VALUE else 10,
                         overflow = TextOverflow.Ellipsis
