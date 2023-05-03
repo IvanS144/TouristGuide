@@ -1,7 +1,8 @@
 package com.mr.touristguide.news.data.remote
 
+import androidx.annotation.Keep
 import com.mr.touristguide.news.data.database.ArticleEntity
-
+@Keep
 data class HeadlineDto(
     var id: Int?,
     val source: SourceDto,

@@ -2,8 +2,6 @@ package com.mr.touristguide.core.data.mappers
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
-import com.mr.touristguide.core.data.remote.LandmarkDto
-import com.mr.touristguide.core.model.Landmark
 import com.mr.touristguide.core.model.Section
 import com.mr.touristguide.ui.theme.h1
 import com.mr.touristguide.ui.theme.h2

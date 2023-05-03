@@ -4,22 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -56,10 +51,12 @@ fun Home(
                 ImageRequest.Builder(LocalContext.current)
                     .data(country.coatOfArmsUrl)
                     .decoderFactory(SvgDecoder.Factory())
+//                    .placeholder(R.drawable.coat_of_arms_of_serbia)
                     .build()
             } else {
                 ImageRequest.Builder(LocalContext.current)
                     .data(country.coatOfArmsUrl)
+//                    .placeholder(R.drawable.coat_of_arms_of_serbia)
                     .build()
 
             }
@@ -68,7 +65,8 @@ fun Home(
                 AsyncImage(
                     model = model,
                     contentDescription = "Flag of" + country.name,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
+                    error = painterResource(id = R.drawable.coat_of_arms_of_serbia)
                 )
             }
         }
@@ -116,18 +114,21 @@ fun Home(
                 ImageRequest.Builder(LocalContext.current)
                     .data(country.flagUrl)
                     .decoderFactory(SvgDecoder.Factory())
+//                    .placeholder(R.drawable.flag_of_serbia)
                     .build()
             } else {
                 ImageRequest.Builder(LocalContext.current)
                     .data(country.flagUrl)
+//                    .placeholder(R.drawable.flag_of_serbia)
                     .build()
 
             }
             AsyncImage(
                 model = model,
                 contentDescription = "Flag of" + country.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.border(2.dp, Color.Black)
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.border(2.dp, Color.Black),
+                error = painterResource(id = R.drawable.flag_of_serbia)
             )
         }
         item {

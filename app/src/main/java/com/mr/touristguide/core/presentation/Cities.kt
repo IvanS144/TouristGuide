@@ -9,8 +9,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,11 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,7 +36,6 @@ import coil.request.ImageRequest
 import com.mr.touristguide.R
 import com.mr.touristguide.core.data.mappers.sectionsToAnnotatedString
 import com.mr.touristguide.core.model.City
-import com.mr.touristguide.core.model.Section
 import com.mr.touristguide.core.presentation.data.SearchViewModel
 import com.mr.touristguide.ui.theme.*
 import com.mr.touristguide.weather.presentation.WeatherCard
@@ -65,7 +63,7 @@ fun CityList(
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = MaterialTheme.colorScheme.onSecondary
             ) {
-                Icon(imageVector = Icons.Default.LocationOn, contentDescription = stringResource(id = R.string.map_of_cities_cd))
+                Icon(imageVector = ImageVector.vectorResource(id = R.drawable.map), contentDescription = stringResource(id = R.string.map_of_cities_cd))
             }
         }) {
         LazyColumn(
@@ -102,7 +100,8 @@ fun CityList(
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(CircleShape),
-                            contentScale = ContentScale.Crop
+                            contentScale = ContentScale.Crop,
+                            error = painterResource(id = R.drawable.city)
                         )
                         Spacer(modifier = Modifier.width(18.dp))
                         Text(
@@ -238,12 +237,13 @@ fun CityDetails(
                         .padding(all = 4.dp)
                 ) {
                     Text(
-                        modifier = Modifier.animateContentSize(
-                            animationSpec = spring(
-                                dampingRatio = Spring.DampingRatioLowBouncy,
-                                stiffness = Spring.StiffnessLow
+                        modifier = Modifier
+                            .animateContentSize(
+                                animationSpec = spring(
+                                    dampingRatio = Spring.DampingRatioLowBouncy,
+                                    stiffness = Spring.StiffnessLow
+                                )
                             )
-                        )
                             .clickable { expanded = !expanded },
                         text = sectionsToAnnotatedString(city.sections),
                         color = MaterialTheme.colorScheme.onPrimaryContainer,

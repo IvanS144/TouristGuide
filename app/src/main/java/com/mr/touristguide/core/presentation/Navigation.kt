@@ -3,6 +3,8 @@
 package com.mr.touristguide.core.presentation
 
 import android.annotation.SuppressLint
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.net.ConnectivityManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,7 +16,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +31,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.mr.touristguide.R
 import com.mr.touristguide.core.model.City
 import com.mr.touristguide.core.model.Country
@@ -35,7 +39,6 @@ import com.mr.touristguide.core.presentation.data.*
 import com.mr.touristguide.news.presentation.Article
 import com.mr.touristguide.news.presentation.NewsScreen
 import com.mr.touristguide.news.presentation.NewsState
-import com.mr.touristguide.weather.presentation.WeatherState
 import com.mr.touristguide.weather.presentation.WeatherViewModel
 import kotlinx.coroutines.launch
 
@@ -95,7 +98,7 @@ fun NavigationDrawerScreen(
             id = "cities",
             itemText = stringResource(id = R.string.cities),
             contentDescription = stringResource(id = R.string.cities_cd),
-            icon = Icons.Default.LocationOn
+            icon = ImageVector.vectorResource(id = R.drawable.city)
         ),
         MenuItem(
             id = "landmarks",
@@ -125,13 +128,13 @@ fun NavigationDrawerScreen(
             id = "map_of_cities",
             itemText = stringResource(id = R.string.map_of_cities),
             contentDescription = stringResource(id = R.string.map_of_cities_cd),
-            icon = Icons.Default.LocationOn
+            icon = ImageVector.vectorResource(id = R.drawable.map)
         ),
         MenuItem(
             id = "map_of_landmarks",
             itemText = stringResource(id = R.string.map_of_landmarks),
             contentDescription = stringResource(id = R.string.map_of_landmarks_cd),
-            icon = Icons.Default.LocationOn
+            icon = ImageVector.vectorResource(id = R.drawable.map)
         )
     )
     ModalNavigationDrawer(
@@ -281,13 +284,21 @@ fun NavigationDrawerScreen(
                         type = NavType.IntType; defaultValue = 1; nullable = false
                     })
                 ) { entry ->
-                    val id = entry.arguments?.getInt("id")
-                    if (id != null) {
-                        val selectedCity = cities?.first { city -> city.id == id }?.let {
-                            //loadWeather(it)
-                            val weatherViewModel = hiltViewModel<WeatherViewModel>()
-                            weatherViewModel.loadWeatherInfo(it)
-                            CityWeather(city = it, weatherViewModel = weatherViewModel)
+                    val connManager = LocalContext.current.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+                    val networkCapabilities =  connManager.getNetworkCapabilities(connManager.activeNetwork)
+                    if(networkCapabilities!=null) {
+                        val id = entry.arguments?.getInt("id")
+                        if (id != null) {
+                            val selectedCity = cities?.first { city -> city.id == id }
+                            if (selectedCity != null) {
+                                //loadWeather(it)
+                                val weatherViewModel = hiltViewModel<WeatherViewModel>()
+                                weatherViewModel.loadWeatherInfo(selectedCity)
+                                CityWeather(
+                                    city = selectedCity,
+                                    weatherViewModel = weatherViewModel
+                                )
+                            }
                         }
                     }
                 }
@@ -409,7 +420,7 @@ fun DrawerHeader() {
 fun DrawerBody(
     items: List<MenuItem>,
     modifier: Modifier = Modifier,
-    itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp),
+    itemTextStyle: TextStyle = TextStyle(fontSize = 18.sp, color = MaterialTheme.colorScheme.onPrimaryContainer),
     onItemClick: (MenuItem) -> Unit
 ) {
     LazyColumn(
@@ -424,7 +435,7 @@ fun DrawerBody(
                     .clickable { println(item.id); onItemClick(item) }
                     .padding(16.dp)
             ) {
-                Icon(imageVector = item.icon, contentDescription = item.contentDescription)
+                Icon(imageVector = item.icon, contentDescription = item.contentDescription, tint = MaterialTheme.colorScheme.onPrimaryContainer)
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(text = item.itemText, style = itemTextStyle, modifier = Modifier.weight(1f))
             }

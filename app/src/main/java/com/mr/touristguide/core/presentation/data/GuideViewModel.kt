@@ -202,7 +202,14 @@ class GuideViewModel @Inject constructor(
                 )
             }
         }
-        landmarksState.landmarks?.forEach { landmark -> landmark.image = imageRepository.getImage(landmark.photoId) }
+        try {
+            landmarksState.landmarks?.forEach { landmark ->
+                landmark.image = imageRepository.getImage(landmark.photoId)
+            }
+        }
+        catch(_: Exception){
+
+        }
     }
 
     private suspend fun loadCountry(locale: String) {

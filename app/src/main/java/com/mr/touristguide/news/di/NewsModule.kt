@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -24,7 +25,10 @@ object NewsModule {
     @Provides
     @Singleton
     fun provideNewsApi(): NewsApi {
-        val client = OkHttpClient.Builder().apply {
+        val client = OkHttpClient.Builder()
+            .readTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .apply {
             addInterceptor(NewsInterceptor())
         }.build()
         return Retrofit.Builder()

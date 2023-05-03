@@ -17,7 +17,6 @@ import com.mr.touristguide.core.presentation.data.GuideViewModel
 import com.mr.touristguide.core.presentation.data.SettingsViewModel
 import com.mr.touristguide.news.presentation.NewsViewModel
 import com.mr.touristguide.ui.theme.TouristGuideTheme
-import com.mr.touristguide.weather.presentation.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

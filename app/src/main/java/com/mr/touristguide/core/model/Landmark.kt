@@ -1,11 +1,6 @@
 package com.mr.touristguide.core.model
 
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.buildAnnotatedString
 import com.mr.touristguide.core.data.remote.UnsplashImage
-import com.mr.touristguide.ui.theme.h1
-import com.mr.touristguide.ui.theme.h2
-import com.mr.touristguide.ui.theme.textSpanNormal
 
 data class Landmark(
     val id: Int,

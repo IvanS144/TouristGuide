@@ -1,11 +1,5 @@
 package com.mr.touristguide.core.model
 
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.buildAnnotatedString
-import com.mr.touristguide.ui.theme.h1
-import com.mr.touristguide.ui.theme.h2
-import com.mr.touristguide.ui.theme.textSpanNormal
-
 data class City(
     val id: Int,
     val name: String,
