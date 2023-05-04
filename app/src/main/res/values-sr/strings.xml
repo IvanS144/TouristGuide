@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Turistučki vodič</string>
+    <string name="app_name">Turistučki vodič kroz Srbiju</string>
     <string name="home_screen">Početna</string>
     <string name="home_screen_cd">Idi na početni akran</string>
     <string name="cities">Gradovi</string>
