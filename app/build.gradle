@@ -7,6 +7,20 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\Ivan\\keystore.jks')
+            storePassword 'kriptografija'
+            keyAlias 'key0'
+            keyPassword 'kriptografija'
+        }
+        release {
+            storeFile file('C:\\Users\\Ivan\\keystore.jks')
+            storePassword 'kriptografija'
+            keyAlias 'key0'
+            keyPassword 'kriptografija'
+        }
+    }
     namespace 'com.mr.touristguide'
     compileSdk 33
 
@@ -37,6 +51,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {

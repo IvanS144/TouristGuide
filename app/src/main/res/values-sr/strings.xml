@@ -18,7 +18,7 @@
     <string name="map_of_landmarks">Mapa znamenitosti</string>
     <string name="map_of_landmarks_cd">Idi na mapu znamenitsoti</string>
     <string name="weather">Vremenska prognoza</string>
-    <string name="settings_num_of_images_option">Koliko slika želite da preuzmem tokom istraživanja gradova?</string>
+    <string name="settings_num_of_images_option">Koliko slika želite da bude prikazano tokom istraživanja gradova i znamenitosti?</string>
     <string name="unlimited">Neograničeno</string>
     <string name="settings_news_caching_option">Omogući keširanje vijesti</string>
     <string name="favorite_landmark_icon_description">Ikonica koja označava znamenitost kao omiljenu</string>
