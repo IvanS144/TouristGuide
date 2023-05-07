@@ -13,19 +13,21 @@ class SearchPagingSource(
 ) : PagingSource<Int, UnsplashImage>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnsplashImage> {
-        val currentPage = params.key ?: 1
+        val nextPage = params.key ?: 1
         return try {
-            val response = imagesApi.searchImages(term = query, perPage = perPage)
+            val response = imagesApi.searchImages(term = query, perPage = perPage, page = nextPage)
             val endOfPaginationReached = if (maxImages > 0) {
-                (currentPage * perPage >= maxImages) || response.results.isEmpty()
+                if(nextPage * perPage >= maxImages)
+                    true
+                else response.results.isEmpty()
             } else {
                 response.results.isEmpty();
             }
             if (response.results.isNotEmpty()) {
                 LoadResult.Page(
                     data = response.results,
-                    prevKey = if (currentPage == 1) null else currentPage - 1,
-                    nextKey = if (endOfPaginationReached) null else currentPage + 1
+                    prevKey = if (nextPage == 1) null else nextPage - 1,
+                    nextKey = if (endOfPaginationReached) null else nextPage + 1
                 )
             } else {
                 LoadResult.Page(
