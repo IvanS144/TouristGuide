@@ -229,7 +229,9 @@ fun NavigationDrawerScreen(
                     )
                 }
                 composable(route = "favorites") {
-                    val favoriteLandmarks = guideViewModel.favoriteLandmarks.value
+                    val favoriteLandmarks =
+                        guideViewModel.landmarksState.landmarks?.filter { landmark -> landmark.isFavorite  }
+                            ?.toList()
                     if (favoriteLandmarks != null) {
                         LandmarkList(
                             landmarks = favoriteLandmarks,

@@ -97,14 +97,16 @@ class GuideViewModel @Inject constructor(
     fun addToFavoriteLandmarks(id: Int) {
         viewModelScope.launch {
             landmarkRepository.addToFavoriteLandmarks(id)
-            favoriteLandmarks.value = landmarkRepository.getFavoriteLandmarks()
+            //favoriteLandmarks.value = landmarkRepository.getFavoriteLandmarks()
+            landmarksState.landmarks?.first { landmark -> landmark.id == id }?.isFavorite=true
         }
     }
 
     fun removeFromFavoriteLandmarks(id: Int) {
         viewModelScope.launch {
             landmarkRepository.removeFromFavoriteLandmarks(id)
-            favoriteLandmarks.value = landmarkRepository.getFavoriteLandmarks()
+            //favoriteLandmarks.value = landmarkRepository.getFavoriteLandmarks()
+            landmarksState.landmarks?.first { landmark -> landmark.id == id }?.isFavorite=false
         }
     }
 
