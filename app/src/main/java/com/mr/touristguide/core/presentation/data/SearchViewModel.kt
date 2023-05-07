@@ -35,7 +35,7 @@ class SearchViewModel @Inject constructor(
     fun search(query: String = searchQuery.value) {
         viewModelScope.launch(Dispatchers.IO) {
             val maxImages = preferencesRepository.getMaxImages()
-            imageRepository.searchImages(term = query, pageSize = 10, maxImages = maxImages)
+            imageRepository.searchImages(term = query, pageSize = 5, maxImages = maxImages)
                 .cachedIn(viewModelScope).collect {
                 _searchedImages.value = it
             }

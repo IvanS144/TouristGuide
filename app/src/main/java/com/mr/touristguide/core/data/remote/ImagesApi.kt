@@ -18,7 +18,8 @@ interface ImagesApi {
     @GET("/search/photos")
     suspend fun searchImages(
         @Query("query") term: String,
-        @Query("per_page") perPage: Int
+        @Query("per_page") perPage: Int,
+        @Query("page") page: Int
     ): SearchResult
 
     @Headers("Authorization: Client-ID ${BuildConfig.UNSPLASH_API_KEY}")

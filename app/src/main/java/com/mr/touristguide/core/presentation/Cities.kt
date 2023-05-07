@@ -280,6 +280,7 @@ fun CityDetails(
 
 @Composable
 fun CityWeather(city: City, weatherViewModel: WeatherViewModel) {
+    val scrollState = rememberScrollState()
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -287,6 +288,7 @@ fun CityWeather(city: City, weatherViewModel: WeatherViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(DarkBlue)
+                .verticalScroll(state = scrollState)
         ) {
             WeatherCard(
                 state = weatherViewModel.state,

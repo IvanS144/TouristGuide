@@ -40,6 +40,7 @@ import com.mr.touristguide.news.presentation.Article
 import com.mr.touristguide.news.presentation.NewsScreen
 import com.mr.touristguide.news.presentation.NewsState
 import com.mr.touristguide.weather.presentation.WeatherViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagingApi::class)
@@ -142,7 +143,22 @@ fun NavigationDrawerScreen(
 //            DrawerHeader()
             DrawerBody(
                 items = items,
-                onItemClick = { item -> navController.navigate(route = item.id) })
+                onItemClick = { item ->
+                    scope.launch {
+                        delay(timeMillis = 250); drawerState.close()
+                    }
+                    if("home" == (item.id)){
+                        navController.navigate(route = item.id){
+                            popUpTo(route = "home")
+                            launchSingleTop = true
+                        }
+                    }
+                    else {
+                        navController.navigate(route = item.id) {
+                            launchSingleTop = true
+                        }
+                    }
+                })
         },
         drawerState = drawerState,
         drawerShape = RectangleShape,
@@ -432,7 +448,7 @@ fun DrawerBody(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { println(item.id); onItemClick(item) }
+                    .clickable { onItemClick(item) }
                     .padding(16.dp)
             ) {
                 Icon(imageVector = item.icon, contentDescription = item.contentDescription, tint = MaterialTheme.colorScheme.onPrimaryContainer)
