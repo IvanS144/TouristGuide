@@ -65,7 +65,7 @@ fun Home(
             Surface(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(8.dp)) {
                 AsyncImage(
                     model = model,
-                    contentDescription = "Flag of" + country.name,
+                    contentDescription = stringResource(id = R.string.serbia_coat_of_arms),
                     contentScale = ContentScale.Fit,
                     error = painterResource(id = R.drawable.coat_of_arms_of_serbia)
                 )
@@ -126,7 +126,7 @@ fun Home(
             }
             AsyncImage(
                 model = model,
-                contentDescription = "Flag of" + country.name,
+                contentDescription = stringResource(id = R.string.flag_of_serbia),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.border(2.dp, Color.Black),
                 error = painterResource(id = R.drawable.flag_of_serbia)
