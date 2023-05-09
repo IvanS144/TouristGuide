@@ -1,6 +1,8 @@
 package com.mr.touristguide.news.presentation
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -64,15 +66,22 @@ fun HeadlinePreview(
     modifier: Modifier = Modifier,
     onClick: (HeadlineDto) -> Unit
 ) {
+    val connManager = LocalContext.current.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val context = LocalContext.current
     Surface(
         modifier = modifier
             .clickable {
-                val browserIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(headline.url)
-                )
-                ContextCompat.startActivity(context, browserIntent, null)
+                val networkCapabilities =  connManager.getNetworkCapabilities(connManager.activeNetwork)
+                if(networkCapabilities!=null) {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(headline.url)
+                    )
+                    ContextCompat.startActivity(context, browserIntent, null)
+                }
+                else{
+                    onClick(headline)
+                }
             },
         shadowElevation = 5.dp,
         shape = RoundedCornerShape(8.dp),
