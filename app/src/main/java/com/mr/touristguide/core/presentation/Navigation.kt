@@ -108,22 +108,10 @@ fun NavigationDrawerScreen(
             icon = Icons.Default.LocationOn
         ),
         MenuItem(
-            id = "settings",
-            itemText = stringResource(id = R.string.settings),
-            contentDescription = stringResource(id = R.string.settings_cd),
-            icon = Icons.Default.Settings
-        ),
-        MenuItem(
             id = "favorites",
             itemText = stringResource(id = R.string.favorite_landmarks),
             contentDescription = stringResource(id = R.string.favorite_landmarks_cd),
             icon = Icons.Default.Favorite
-        ),
-        MenuItem(
-            id = "news",
-            itemText = stringResource(id = R.string.news),
-            contentDescription = stringResource(id = R.string.news_cd),
-            icon = Icons.Default.Notifications
         ),
         MenuItem(
             id = "map_of_cities",
@@ -136,6 +124,18 @@ fun NavigationDrawerScreen(
             itemText = stringResource(id = R.string.map_of_landmarks),
             contentDescription = stringResource(id = R.string.map_of_landmarks_cd),
             icon = ImageVector.vectorResource(id = R.drawable.map)
+        ),
+        MenuItem(
+            id = "news",
+            itemText = stringResource(id = R.string.news),
+            contentDescription = stringResource(id = R.string.news_cd),
+            icon = Icons.Default.Notifications
+        ),
+        MenuItem(
+            id = "settings",
+            itemText = stringResource(id = R.string.settings),
+            contentDescription = stringResource(id = R.string.settings_cd),
+            icon = Icons.Default.Settings
         )
     )
     ModalNavigationDrawer(
